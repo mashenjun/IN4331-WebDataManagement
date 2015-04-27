@@ -1,0 +1,14 @@
+doc('/db/movie/movies_refs.xml')/child::movies//child::title
+doc('/db/movie/movies_refs.xml')/child::movies//child::title/text()
+doc('/db/movie/movies_refs.xml')/child::movies//child::title[../year>2000]/text()
+doc('/db/movie/movies_refs.xml')/child::movies//movie[title='Spider-Man']/summary/text()
+doc('/db/movie/movies_refs.xml')/child::movies//artist[@id=../movie[title="Heat"]/director/@id]
+doc('/db/movie/movies_refs.xml')/child::movies//child::movie[(director|actor)/@id=//artist[last_name='Dunst']/@id]/title/text()
+doc('/db/movie/movies_refs.xml')/child::movies//child::movie[./summary]/title/text()
+doc('/db/movie/movies_refs.xml')/child::movies//child::movie[not(./summary)]/title/text()
+doc('/db/movie/movies_refs.xml')/child::movies//child::movie[year<(year-from-date(fn:current-dateTime())-5)]/title/text()
+doc('/db/movie/movies_refs.xml')/child::movies//child::movie[title='Unforgiven']/actor[@id=//artist[first_name='Clint']/@id]/@role/string()
+doc('/db/movie/movies_refs.xml')/child::movies//child::movie[../count(movie)]/title/text()
+doc('/db/movie/movies_refs.xml')/child::movies//child::movie[title='Marie Antoinette']/preceding-sibling::movie[1]/title/text()
+doc('/db/movie/movies_refs.xml')/child::movies//child::movie/title[contains(.,"V")]/text()
+doc('/db/movie/movies_refs.xml')/child::movies//child::movie[count(actor)=3]/title/text()
