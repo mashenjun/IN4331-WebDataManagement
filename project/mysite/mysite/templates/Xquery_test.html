@@ -1,0 +1,9 @@
+<html>
+{
+let $ms:=doc('http://localhost:8080/exist/rest/db/movie/movies_alone.xml')
+for $result in $ms/movies/movie
+where $result/year>2002
+return data($result/title|$result/year)
+}
+
+</html>

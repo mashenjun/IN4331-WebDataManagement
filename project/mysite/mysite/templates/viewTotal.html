@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="en">
+  <head>    
+        <meta charset="utf-8">    
+        <title>Chart</title>
+      <script type="text/javascript" src='{% static "js/d3.min.js" %}'></script>
+      <link href='{% static "CSS/semantic.min.css" %}' rel="stylesheet" type="text/css"/>
+      <script type="text/javascript" src='{% static "js/semantic.min.js" %}'></script>
+  </head>   
+  
+<style>  
+  
+    .axis path,
+        .axis line{
+        fill: none;
+        stroke: black;
+        shape-rendering: crispEdges;
+}  
+  
+    .axis text {
+        font-family: sans-serif;
+        font-size: 12px;
+}  
+
+    .panle1, .panle2 {
+        margin-left:auto;  
+        margin-right:auto;  
+        width:600px; 
+}
+
+    #totaltag{
+        margin-left:auto;
+        margin-right:auto;
+        width:300px;
+    }
+
+  
+</style>  
+    <body>
+        <div id="totaltag" >
+            <div class="ui label" >
+                total
+                <div class="detail" id="total"></div>
+            </div>
+        </div>
+
+        <div class="panle1"></div>
+        <div class="panle2"></div>
+
+        <script>  
+          
+        var width = 600;  
+        var height = 600;  
+        var emotion1 = [0,0,0,0,0,0,0,0];
+        var text2emotion1 = ['Angry','Sad','Disgust','Dissatisfied','Excited','Happy','Satisfied','None'];
+        var text2emotion2 = ['Highly Positive','Slightly Positive','Neutral','Slightly Negative','Very Negative'];
+        var emotion2 = [0,0,0,0,0]
+
+        //generate dataset
+        d3.text('{% static "needtoVis.csv" %}', function (error, data ){
+            var csvdata = d3.csv.parseRows(data);
+             document.getElementById("total").innerHTML=csvdata.length;
+            csvdata.forEach(function (row,i){
+                switch (row[row.length-2].toString()){
+                    case 'Angry':
+                        emotion1[0]++;
+                        break;
+                    case 'Sad':
+                        emotion1[1]++;
+                        break;
+                    case 'Disgust':
+                        emotion1[2]++;
+                        break;
+                    case 'Dissatisfied':
+                        emotion1[3]++;
+                        break;
+                    case 'Excited':
+                        emotion1[4]++;
+                        break;
+                    case 'Happy':
+                        emotion1[5]++;
+                        break;
+                    case 'Satisfied':
+                        emotion1[6]++;
+                        break;
+                    case 'None':
+                        emotion1[7]++;
+                        break;
+                };
+
+                switch (row[row.length-3].toString()){
+                case 'Highly Positive':
+                    emotion2[0]++;
+                    break;
+                case 'Slightly Positive':
+                    emotion2[1]++;
+                    break;
+                case 'Neutral':
+                    emotion2[2]++;
+                    break;
+                case 'Slightly Negative':
+                    emotion2[3]++;
+                    break;
+                case 'Very Negative':
+                    emotion2[4]++;
+                    break;
+
+                };
+            });
+
+            console.log(emotion1);
+        var svg = d3.select(".panle1").append("svg")  
+                                .attr("width",width)  
+                                .attr("height",height);  
+          
+        var xAxisScale = d3.scale.ordinal()  
+                        .domain(text2emotion1.map(function(d){return d;}))  
+                        .rangeRoundBands([0,500]);  
+                              
+        var yAxisScale = d3.scale.linear()  
+                        .domain([0,d3.max(emotion1)])  
+                        .range([500,0]);  
+                              
+        var xAxis = d3.svg.axis()  
+                        .scale(xAxisScale)  
+                        .orient("bottom");  
+          
+        var yAxis = d3.svg.axis()  
+                        .scale(yAxisScale)  
+                        .orient("left");  
+  
+        var xScale = d3.scale.ordinal()  
+                        .domain(d3.range(emotion1.length))  
+                        .rangeRoundBands([0,500],0.05);  
+                              
+        var yScale = d3.scale.linear()  
+                        .domain([0,d3.max(emotion1)])  
+                        .range([0,500]);  
+          
+        svg.selectAll("rect")  
+           .data(emotion1)  
+           .enter()  
+           .append("rect")  
+           .attr("x", function(d,i){  
+                return 30 + xScale(i);  
+           } )  
+           .attr("y",function(d,i){  
+                return 50 + 500 - yScale(d) ;  
+           })  
+           .attr("width", function(d,i){  
+                return xScale.rangeBand();  
+           })  
+           .attr("height",yScale)  
+           .attr("fill","steelblue");  
+             
+        svg.selectAll("text")  
+            .data(emotion1)  
+            .enter().append("text")  
+            .attr("x", function(d,i){  
+                return 30 + xScale(i);  
+           } )  
+           .attr("y",function(d,i){  
+                return 50 + 500 - yScale(d) ;  
+           })  
+            .attr("dx", function(d,i){  
+                return xScale.rangeBand()/3;  
+           })  
+            .attr("dy", 15)  
+            .attr("text-anchor", "begin")  
+            .attr("font-size", 14)  
+            .attr("fill","white")  
+            .text(function(d,i){  
+                return d;  
+            });  
+             
+        svg.append("g")  
+            .attr("class","axis")  
+            .attr("transform","translate(30,550)")  
+            .call(xAxis);  
+              
+        svg.append("g")  
+            .attr("class","axis")  
+            .attr("transform","translate(30,50)")  
+            .call(yAxis);
+
+            //draw second graph=================================
+             var svg2 = d3.select(".panle2").append("svg")  
+                                .attr("width",width)  
+                                .attr("height",height);  
+          
+        var xAxisScale2 = d3.scale.ordinal()  
+                        .domain(text2emotion2.map(function(d){return d;}))  
+                        .rangeRoundBands([0,500]);  
+                              
+        var yAxisScale2 = d3.scale.linear()  
+                        .domain([0,d3.max(emotion2)])  
+                        .range([500,0]);  
+                              
+        var xAxis2 = d3.svg.axis()  
+                        .scale(xAxisScale2)  
+                        .orient("bottom");  
+          
+        var yAxis2 = d3.svg.axis()  
+                        .scale(yAxisScale2)  
+                        .orient("left");  
+  
+        var xScale2 = d3.scale.ordinal()  
+                        .domain(d3.range(emotion2.length))  
+                        .rangeRoundBands([0,500],0.05);  
+                              
+        var yScale2 = d3.scale.linear()  
+                        .domain([0,d3.max(emotion2)])  
+                        .range([0,500]);  
+          
+        svg2.selectAll("rect")  
+           .data(emotion2)  
+           .enter()  
+           .append("rect")  
+           .attr("x", function(d,i){  
+                return 30 + xScale2(i);  
+           } )  
+           .attr("y",function(d,i){  
+                return 50 + 500 - yScale2(d) ;  
+           })  
+           .attr("width", function(d,i){  
+                return xScale2.rangeBand();  
+           })  
+           .attr("height",yScale2)  
+           .attr("fill","green");  
+             
+        svg2.selectAll("text")  
+            .data(emotion2)  
+            .enter().append("text")  
+            .attr("x", function(d,i){  
+                return 30 + xScale2(i);  
+           } )  
+           .attr("y",function(d,i){  
+                return 50 + 500 - yScale2(d) ;  
+           })  
+            .attr("dx", function(d,i){  
+                return xScale2.rangeBand()/3;  
+           })  
+            .attr("dy", 15)  
+            .attr("text-anchor", "begin")  
+            .attr("font-size", 14)  
+            .attr("fill","white")  
+            .text(function(d,i){  
+                return d;  
+            });  
+             
+        svg2.append("g")  
+            .attr("class","axis")  
+            .attr("transform","translate(30,550)")  
+            .call(xAxis2);  
+              
+        svg2.append("g")  
+            .attr("class","axis")  
+            .attr("transform","translate(30,50)")  
+            .call(yAxis2);
+
+        })
+          
+        
+        // for(var i = 0; i < num ; i++){  
+        //     var tempnum = Math.floor( Math.random() * 50 );   // 返回 0~49 整数  
+        //     emotion1.push(tempnum);  
+        // }       
+        </script>    
+          
+    </body>    
+</html>    
