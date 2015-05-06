@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+{% load static %}
+<html>
+    <head>
+        <meta charset="utf-8" />
+        <title>Full Screen Background Images with One Line of CSS | Tutorialzine Freebie</title>
+        
+        <!-- The stylesheet -->
+        <link rel="stylesheet" href='{% static "CSS/styles.css" %}' />
+        <link rel="stylesheet" href='{% static "CSS/semantic.min.css" %}' />
+        <script type="text/javascript" src='{% static "js/semantic.min.js" %}'></script>
+        <style type="text/css">
+        #container{  
+
+            margin-left:auto;  
+            margin-right:auto;  
+            width:800px;  
+        }  
+
+        #button{  
+            position: relative;
+            top:500px;
+        }  
+    </style>
+        <!--[if lt IE 9]>
+          <script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+        <![endif]-->
+    </head>
+    
+    <body>
+    <div id="container">
+            <a class="ui teal button huge" id="button" href='/Result/'>    show Result    </a> 
+            <a class="ui teal button huge" id="button" href ='/viewCSV/'>    &nbsp try update &nbsp    </a>
+			<a class="ui teal button huge" id="button" href ='/viewTotal/' >    Sentiment Monitor     </a>
+    </div>
+    </body>
+</html>

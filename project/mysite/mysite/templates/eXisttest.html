@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+{% load static %}
+<html>
+    <head>
+        <script type="text/javascript" src='{% static "js/jquery-1.11.2.min.js" %}'></script>
+<script type="text/javascript">
+
+        $(document).ready(function(){
+        $("body").append('<h1>{{tree.0.text}}</h1>');
+        });
+
+</script>
+    </head>
+    
+    <body>
+        <form action="action_page.php">
+            First name:<br>
+        <input type="text" name="firstname" value="Mickey">
+            <br>
+            Last name:<br>
+        <input type="text" name="lastname" value="Mouse">
+           <br>
+            Title:<br>
+        <select name="title">
+            {% for element in title %}
+　       <option value="Taipei">{{ element.text }}</option>
+
+            {%endfor%}
+        </select>
+            <br>
+            Genre:<br>
+        <select name="title">
+            {% for element in genre %}
+　       <option value="Taipei">{{ element.text }}</option>
+            {%endfor%}
+        </select>
+            <br>
+            Director:<br>
+        <select name="title">
+            {% for element in director %}
+　       <option value="Taipei">{{ element }}</option>
+            {%endfor%}
+        </select>
+            <br><br>
+        <input type="submit" value="Submit">
+
+
+</form>
+    <span id="result"></span>
+    </body>
+</html>
