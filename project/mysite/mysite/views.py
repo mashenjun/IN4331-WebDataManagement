@@ -30,24 +30,46 @@ def Result(request):
     html = t.render(Context({}))
     return HttpResponse(html)
 
+def Xquerytest(request):
+    t = get_template('Xquery_test.html')
+    html = t.render(Context({}))
+    return HttpResponse(html)
+
 def eXist(request):
     director_list = []
     views = get_template('eXisttest.html')
-    title = requests.get('http://localhost:8080/exist/rest/db/movies?_query=//title&_warp=no')
-    genre = requests.get('http://localhost:8080/exist/rest/db/movies?_query=distinct-values(//genre)')
-    directors = requests.get('http://localhost:8080/exist/rest/db/movies?_query=//director')
+    title = requests.get('http://localhost:8080/exist/rest/db/movies/movies.xml?_query=//title&_warp=no')
+    genre = requests.get('http://localhost:8080/exist/rest/db/movies/movies.xml?_query=distinct-values(//genre)')
+    directors = requests.get('http://localhost:8080/exist/rest/db/movies/movies.xml?_query=//director')
+    actors = requests.get('http://localhost:8080/exist/rest/db/movies/movies.xml?_query=//actor')
+    years = requests.get('http://localhost:8080/exist/rest/db/movies/movies.xml?_query=distinct-values(//year)')
+
     tree_director = ElementTree.fromstring(directors.content)
     for element in tree_director:
         name= element.find('last_name').text+' '+element.find('first_name').text
-        print (name)
+        # print (name)
         if name not in director_list:
             director_list.append(name)
 
+    years_list=[]
+    for i in ElementTree.fromstring(years.content).findall('*'):
+        years_list.append(int(i.text))
+    years_list.sort()
+    # print (years_list)
+
+    actor_list = []
+    tree_actor = ElementTree.fromstring(actors.content)
+    for element in tree_actor:
+        name= element.find('last_name').text+' '+element.find('first_name').text
+        if name not in actor_list:
+            actor_list.append(name)
+
     tree_title = ElementTree.fromstring(title.content)
     tree_genre = ElementTree.fromstring(genre.content)
-    print (len(director_list))
+    # print (len(director_list))
 
-    response = views.render(Context({'title': tree_title.findall('*'),'genre':tree_genre.findall('*'),'director':director_list}))
+    response = views.render(Context({'title': tree_title.findall('*'),'genre':tree_genre.findall('*'),'director':director_list,'actors':actor_list,
+                                    'years':years_list}))
     return HttpResponse(response)
 
 
@@ -89,6 +111,50 @@ def postdata(Num):
     payload = { 'key': API_KEY }
     print(os.getcwd())
     requests.put(request_url, data=csv_file, params=payload, headers=headers)
+
+def sendrequest(request):
+    import requests
+
+    par_list=[]
+    body="//"
+    mark="-"
+    datastring=""
+    for i in range(1,7,1):
+        a='par'+str(i)
+        b=str(request.GET[a])
+        if(i==4):
+            b=b.split(',')
+            b.pop()
+            #print (b)
+        par_list.append(b)
+    #print (par_list[0]+" "+par_list[1])
+    url="http://localhost:8080/exist/rest/db/movies/movies.xml?_query="
+    # body=body+'movie[title=\"'+par_list[0]+'\"]/title'
+    if par_list[0]!="":
+        body=body+'title=\"'+par_list[0]+'\"'
+    elif par_list[1]!="":
+        body = body+'movie[genre=\"'+par_list[1]+'\"]/title'
+
+
+    request_content= url+body
+    print (request_content)
+    result=requests.get(request_content)
+    #print (result.content)
+    tree_title = ElementTree.fromstring(result.content)
+    print (len(tree_title.findall('*')))
+    if (len(tree_title.findall('*'))>1):
+        for x in range(0, len(tree_title.findall('*'))-1):
+            datastring=datastring+tree_title.findall('*')[x].text+mark
+        datastring=datastring+tree_title.findall('*')[len(tree_title.findall('*'))-1].text
+
+    elif (len(tree_title.findall('*'))==1):
+        datastring= tree_title.findall('*')[0].text
+    print (datastring)
+    return HttpResponse(datastring)
+
+def getsummery(request):
+
+    return HttpResponse()
 
 def main(request):
     import csv

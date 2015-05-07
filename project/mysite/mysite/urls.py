@@ -11,8 +11,10 @@ urlpatterns = patterns('',
     url(r'^viewTotal/$', 'mysite.views.viewTotal'),
     url(r'^JavaRead/$', 'mysite.views.JavaRead'),
     url(r'^eXist/$', 'mysite.views.eXist'),
+    url(r'^Xquerytest/$', 'mysite.views.Xquerytest'),
     url(r'^index/$', 'mysite.views.index'),
     url(r'^main/$', 'mysite.views.main'),
+    url(r'^sendrequest/$','mysite.views.sendrequest'),
     url(r'^admin/', include(admin.site.urls)),
 
 )
