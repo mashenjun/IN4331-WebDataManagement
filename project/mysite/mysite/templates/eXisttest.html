@@ -21,11 +21,12 @@
 
         var par5=document.getElementById("years").value;
         var par6=document.getElementById("keyword").value;
+        console.log(par4);
         $.get("/sendrequest/",{'par1':par1,'par2':par2,'par3':par3,'par4':par4,'par5':par5,'par6':par6}, function(ret){
 
                     console.log(ret);
-                    if (ret.indexOf('-')>0){
-                        var res=ret.split("-");
+                    if (ret.indexOf('+')>0){
+                        var res=ret.split("+");
                         console.log(res.length);
                         var htmlcontent=""
                         for (var i =0;i<res.length;i++){
