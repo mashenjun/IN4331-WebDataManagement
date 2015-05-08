@@ -16,11 +16,37 @@ return <result>
 }
 </results>
 
+(optional):
+<results>
+{
+let $ms:=doc('/db/movies/movies_alone.xml'),$ad:=doc('/db/movies/artists_alone.xml')
+for $x in $ms/movies/movie
+for $i in $x/actor
+return <result>
+    {$x/title}
+    <role>{$i/@role/string()}</role>
+    </result>
+}
+</results>
+
+
 Q3:
 let $ms:=doc('movie/movies_alone.xml'),$as:=doc("movie/artists_alone.xml")
 for $result in $ms/movies/movie, $artist in $as
 where exists($result[./actor/@id=./director/@id])
 return data($result/title)
+
+(optional:)
+<results>
+{
+let $ms:=doc('/db/movies/movies_alone.xml'),$ad:=doc('/db/movies/artists_alone.xml')
+for $x in $ms/movies/movie
+for $y in $x/actor
+where $x/director/@id=$y/@id
+return $x/title/text()
+}
+</results>
+
 
 Q4:
 let $ms := doc('movie/movies_alone.xml')
@@ -43,6 +69,29 @@ return
         }</ol>
      </results>
 
+(optional:)
+<results>
+{
+let $ms:=doc('/db/movies/movies_alone.xml'),$ad:=doc('/db/movies/artists_alone.xml')
+for $x in $ms/movies/movie
+let $genre:=$x/genre
+let $i:= $x/title/text()
+group by $genre
+return
+    
+  <result>
+    {<h1>{$genre/text()}</h1>}
+    {
+    for $title in $i
+    return  <p>{$title}</p>
+    }    
+    </result>
+    
+}
+</results>
+
+
+
 Q5:
 <results>
 {
@@ -51,7 +100,7 @@ for $actorid in distinct-values($ms/movies/movie/actor/@id)
 return <actor>
     {$actorid},
     {for $movie in $ms/movies/movie
-        where $movie/actor/@id=$actorid
+        where $movie/actor/@id=$actorid 
         return <title>
             {data($movie/title)}
         </title>
@@ -59,6 +108,28 @@ return <actor>
     </actor>
 }
 </results>
+
+(optinal:)
+xquery version "3.0";
+<results>
+{
+let $ms:=doc('/db/movies/movies_alone.xml'),$ad:=doc('/db/movies/artists_alone.xml')
+
+for $y in $ad/artists/artist
+return 
+<actor>{$y/@id/string()}
+{
+    for $x in $ms/movies/movie
+    for $i in $x/actor
+    where $y/@id=$i/@id
+    return
+        <title>{$x/title/text()}</title>
+}
+</actor>
+    
+}
+</results>
+
 
 Q6:
 let $ms:=doc('movie/movies_alone.xml'),$as:=doc("movie/artists_alone.xml")
@@ -74,6 +145,26 @@ return <title>
     }
     </director>
 </title>
+
+(optional:)
+<results>
+{
+let $ms:=doc('/db/movies/movies_alone.xml'),$ad:=doc('/db/movies/artists_alone.xml')
+for $x in $ms/movies/movie
+return
+<p>
+{$x/title}
+{
+for $y in $ad/artists/artist
+where $x/director/@id= $y/@id 
+return <p>{$y/last_name/text()},{$y/first_name/text()}</p>
+
+}
+</p>
+}
+</results>
+
+
 
 Q7:
 let $ms:=doc('movie/movies_alone.xml'),$as:=doc("movie/artists_alone.xml")
@@ -94,6 +185,30 @@ return <title>
     }
     </actors>
 </title>
+
+(optional:)
+<results>
+{
+let $ms:=doc('/db/movies/movies_alone.xml'),$ad:=doc('/db/movies/artists_alone.xml')
+for $x in $ms/movies/movie
+return
+<p>
+
+{$x/title}
+{
+    <Actors>   
+        {
+    for $y in $ad/artists/artist
+    for $i in $x/actor
+    where $y/@id = $i/@id
+    return
+       ( $y/last_name,<role>{$i/@role/string()}</role>)
+        
+        }
+    </Actors>
+}      
+</p>
+}
 
 Q8:
 <result>{

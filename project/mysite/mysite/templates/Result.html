@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+{% load static %}
+<html>
+<head>
+	<title>the visualization result</title>
+	<script type="text/javascript" src='{% static "js/d3.min.js" %}'></script>
+	<script src='{% static "js/radar-chart.min.js" %}'></script>
+	<link rel="stylesheet" href='{% static "CSS/radar-chart.min.css" %}'>
+	<link href='{% static "CSS/semantic.min.css" %}' rel="stylesheet" type="text/css"/>
+	<script type="text/javascript" src='{% static "js/semantic.min.js" %}'></script>
+	<style type="text/css">
+		#container{  
+			margin-left:auto;  
+			margin-right:auto;  
+			width:1200px;  
+		}  
+
+		.onediv{width:50%;float:left;}
+		.twodiv{margin-left:50%;}
+	</style>
+</head>
+<body>
+
+<div class="ui label">
+  total
+  <div class="detail" id="total"></div>
+</div>
+
+	<script type="text/javascript">
+
+		var usefuldata= [];
+		var issuetoindex = {};
+		var indextoissue = [];
+		var usefuldata2 =[];
+		var index = 0;
+		d3.text('{% static "needtoVis.csv" %}',function(error, data){
+				var csvdata = d3.csv.parseRows(data)
+				document.getElementById("total").innerHTML=csvdata.length;
+				csvdata.forEach(function (row,i){
+				if (row[row.length-1]!="Unspecified" ){
+					if(!(row[row.length-1].toString() in issuetoindex)){
+						issuetoindex[row[row.length-1].toString()]=index;
+						indextoissue.push(row[row.length-1]);
+						usefuldata.push([
+				[
+				{axis:"Angry", value:0},
+				{axis:"Sad", value:0},
+				{axis:"Dissatisfied", value:0},
+				{axis:"Disgust", value:0},
+				{axis:"Happy", value:0},
+				{axis:"Excited", value:0},
+				{axis:"Satisfied", value:0},
+				{axis:"None", value:0}
+				]
+			]);
+						usefuldata2.push([
+				[
+				{axis:"Highly Positive", value:0},
+				{axis:"Slightly Positive", value:0},
+				{axis:"Neutral", value:0},
+				{axis:"Slightly Negative", value:0},
+				{axis:"Very Negative", value:0}
+				]
+			]);
+						index++;
+					}
+						//console.log(template);
+					 var tempindex=issuetoindex[row[row.length-1].toString()];
+
+					usefuldata[tempindex][0].forEach(function(unit,i){
+							// console.log(usefuldata[tempindex][0].length);
+							// console.log(unit.axis);
+
+					 	if(unit.axis==row[row.length-2].toString()){
+					 		unit.value++;
+					 		// console.log(tempindex+"___"+unit.axis+"___"+unit.value);
+					 	}
+					 });
+
+					usefuldata2[tempindex][0].forEach(function(unit,i){
+							// console.log(usefuldata[tempindex][0].length);
+							// console.log(unit.axis);
+						console.log(row[row.length-3].toString());
+					 	if(unit.axis==row[row.length-3].toString()){
+					 		unit.value++;
+					 		// console.log(tempindex+"___"+unit.axis+"___"+unit.value);
+					 	}
+					 });
+					
+
+				}
+			});
+
+			for(var i=0; i< usefuldata.length; i++){
+				var target = d3.select("body").append("div")
+				.attr("class","radarandtext"+i.toString())
+				.attr("id","container")
+					.append("div")
+					.attr("id","radatchart"+i.toString())
+					.attr("class","onediv");
+
+				target.select(function(){return this.parentNode;})
+					.append("div")
+					.attr("id","radatchart_s"+i.toString())
+					.attr("class","twodiv");
+			};
+
+			for(var i=0; i< usefuldata.length; i++){
+				d3.select(".radarandtext"+i.toString())
+				.append("text")
+				.text(indextoissue[i].toString());
+
+				d3.select(".radarandtext"+i.toString())
+				.append("hr");
+			}
+
+			for(var i=0; i< usefuldata.length; i++){
+				 RadarChart.draw("#radatchart"+i.toString(), usefuldata[i]);
+				 RadarChart.draw("#radatchart_s"+i.toString(),usefuldata2[i]);
+			}
+
+
+		});
+
+
+	</script>
+</body>
+</html>
