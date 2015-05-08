@@ -1,5 +1,5 @@
 Q1:
-let $ms:=doc('movie/movies_alone.xml'),$as:=doc("movie/artists_alone.xml")
+let $ms:=doc('movie/movies.xml'),$as:=doc("movie/artists_alone.xml")
 for $result in $ms/movies/movie
 where $result/year>2002
 return data($result/title|$result/year)
@@ -96,4 +96,29 @@ return <title>
 </title>
 
 Q8:
+<result>{
+let $ms:=doc('movie/movies_alone.xml'),$as:=doc("movie/artists_alone.xml")
+for $movie in $ms/movies/movie
+where count($movie/actor)>=2
+return 
+    if (count($movie/actor)>2)
+    then
+        (<title>{data($movie/title)}</title>, <actor>{concat($as//artist[@id=$movie/actor/@id][1]/last_name/text()," ",$as//artist[@id=$movie/actor/@id][1]/first_name/text(),' as ',$movie/actor[1]/@role/string())}</actor>, <actor>{concat($as//artist[@id=$movie/actor/@id][2]/last_name/text()," ",$as//artist[@id=$movie/actor/@id][1]/first_name/text(),' as ',$movie/actor[2]/@role/string())}</actor>, <et-al/>)
+    else
+        (<title>{data($movie/title)}</title>, <actor>{concat($as//artist[@id=$movie/actor/@id][1]/last_name/text()," ",$as//artist[@id=$movie/actor/@id][1]/first_name/text(),' as ',$movie/actor[1]/@role/string())}</actor>, <actor>{concat($as//artist[@id=$movie/actor/@id][2]/last_name/text()," ",$as//artist[@id=$movie/actor/@id][1]/first_name/text(),' as ',$movie/actor[2]/@role/string())}</actor>)
 
+}
+</result>
+
+Q9:
+<result>{
+let $ms:=doc('movie/movies_alone.xml'),$as:=doc("movie/artists_alone.xml")
+for $movie in $ms/movies/movie
+where $movie/director/@id=$as//artist[./last_name='Eastwood']/@id and $movie/year>1990
+return (<title>
+    {data($movie/title)}
+    </title>,
+    <year>
+        {data($movie/year)}</year>)
+}
+</result>
