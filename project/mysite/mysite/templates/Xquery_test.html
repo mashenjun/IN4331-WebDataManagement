@@ -1,9 +1,13 @@
+{% load static %}
 <html>
-{
-let $ms:=doc('http://localhost:8080/exist/rest/db/movie/movies_alone.xml')
-for $result in $ms/movies/movie
-where $result/year>2002
-return data($result/title|$result/year)
-}
+<head>
+    <script type="text/javascript" src='{% static "js/jquery-1.11.2.min.js" %}'></script>
+    <script type="text/javascript">
+
+    </script>
+</head>
+<body>
+{{content}}
+</body>
 
 </html>

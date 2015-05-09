@@ -5,11 +5,26 @@ from django.shortcuts import render_to_response, render
 from django.http import HttpResponse, Http404, HttpRequest
 from django.template import *
 from xml.etree import ElementTree
+from eulexistdb import db
+import lxml.etree as ET 
 import os
 import requests
 
+class TryExist:
+    def __init__(self):
+        self.db = db.ExistDB(server_url="http://localhost:8080/exist")
+    def get_data(self, query):
+        result = list()
+        qresult = self.db.executeQuery(query)
+        hits = self.db.getHits(qresult)
+        for i in range(hits):
+            result.append(str(self.db.retrieve(qresult, i)))
+        return result
 
-
+quer1 = '''
+let $x:= doc("/db/movies/movies.xml")
+return $x//year
+'''
 
 def viewCSV(request):
     return  render_to_response('viewCSV.html')
@@ -31,8 +46,15 @@ def Result(request):
     return HttpResponse(html)
 
 def Xquerytest(request):
+    # a = TryExist()
+    # myres = a.get_data(quer1)
+    # print myres
+    data= requests
+    print("-------------")
+    print(requests)
+    print("-------------")
     t = get_template('Xquery_test.html')
-    html = t.render(Context({}))
+    html = t.render(Context({'data':data}))
     return HttpResponse(html)
 
 def eXist(request):
@@ -232,4 +254,20 @@ def main(request):
 
     requests.put(request_url, data=csv_file, params=payload, headers=headers)
     return HttpResponse("Success!!!")
+
+def summary(request, offset):
+    print("---------------")
+    print(str(offset))
+    print("---------------")
+    t = get_template('Xquery_test.html')
+    request_content= "http://localhost:8080/exist/rest/db/movies/movies.xml?_query=//movie[title=\""+offset+"\"]/summary"
+    content= requests.get(request_content)
+    print(content.content)
+    if "summary" in content.content:
+        txt = content.content.split("<summary>")[1].split('</summary>')[0]
+        result = txt
+    else :
+        result ='no summary'
+    html = t.render(Context({'content':result}))
+    return HttpResponse(html)
 
