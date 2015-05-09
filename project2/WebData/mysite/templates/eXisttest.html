@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+{% load static %}
+<html>
+    <head>
+        <script type="text/javascript" src='{% static "js/jquery-1.11.2.min.js" %}'></script>
+<script type="text/javascript">
+
+
+
+        function submit1(){
+        var par1=document.getElementById("title").value;
+
+        var par2=document.getElementById("genre").value;
+        var par3=document.getElementById("director").value;
+        var select=document.getElementById("actors");
+        var par4="";
+        for (var i=0,len=select.options.length;i<len;i++){
+            if(select.options[i].selected===true)
+            par4=par4+(select.options[i].value)+",";
+        }
+
+        var par5=document.getElementById("years").value;
+        var par6=document.getElementById("keyword").value;
+        console.log(par4);
+        $.get("/sendrequest/",{'par1':par1,'par2':par2,'par3':par3,'par4':par4,'par5':par5,'par6':par6}, function(ret){
+
+                    console.log(ret);
+                    if (ret.indexOf('+')>0){
+                        var res=ret.split("+");
+                        console.log(res.length);
+                        var htmlcontent=""
+                        for (var i =0;i<res.length;i++){
+                            var summaryurl = "http://localhost:8080/exist/rest/db/movies/movies.xml?_query=//movie[title=\""+res[i]+"\"]/summary/text()"
+                            var herfcontent = '<a href=\''+summaryurl+'\'>'+res[i]+'</a>'
+                            htmlcontent = htmlcontent+ herfcontent+ '<br>'
+
+                        }
+                        $("#result").html(htmlcontent);
+                    }
+
+                    else {
+                    var summaryurl= "http://localhost:8080/exist/rest/db/movies/movies.xml?_query=//movie[title=\""+ret+"\"]/summary/text()"
+                    $("#result").html('<a href=\''+summaryurl+'\'>'+ret+'</a>');
+                    }
+
+                });
+            return true;
+        }
+
+</script>
+    </head>
+    
+    <body>
+         <form>
+            <!--First name:<br>-->
+        <!--<input type="text" name="firstname" value="Mickey">-->
+            <!--<br>-->
+            <!--Last name:<br>-->
+        <!--<input type="text" name="lastname" value="Mouse">-->
+           <br>
+
+            Title:<br>
+        <select id="title">
+        <option value="">please slecte a title</option>
+            {% for element in title %}
+　       <option value="{{element.text}}">{{ element.text }}</option>
+            {%endfor%}
+        </select>
+            <br>
+
+            Genre:<br>
+        <select id="genre">
+            <option value="">please slecte a genre</option>
+            {% for element in genre %}
+　       <option value="{{element.text}}">{{ element.text }}</option>
+            {%endfor%}
+        </select>
+            <br>
+
+            Director:<br>
+        <select id="director">
+            <option value="">please slecte a director</option>
+            {% for element in director %}
+　       <option value="{{element}}">{{ element }}</option>
+            {%endfor%}
+        </select>
+            <br>
+
+
+
+           Actors:<br>
+        <select multiple id="actors" size="12">
+
+            {% for element in actors %}
+　       <option value="{{element}}">{{ element }}</option>
+            {%endfor%}
+        </select>
+            <br>
+
+            Years:<br>
+        <select id="years">
+            <option value="">please slecte a year</option>
+            {% for element in years %}
+　       <option value={{element}}>{{ element}}</option>
+            {%endfor%}
+        </select>
+
+            <br/>
+             Key word in Summary:<br>
+        <textarea cols="30" rows="4" style="font-size:1.5em" id="keyword" placeholder="Key-words"></textarea>
+
+            <br><br>
+        <button type="button" onclick="submit1()">Submit</button>
+
+
+</form>
+    <div id="result"></div>
+    </body>
+</html>
