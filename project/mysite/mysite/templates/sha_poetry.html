@@ -1,0 +1,39 @@
+{% load static %}
+<html>
+<head>
+    <script type="text/javascript" src='{% static "js/jquery-1.11.2.min.js" %}'></script>
+    <link href='{% static "CSS/semantic.min.css" %}' rel="stylesheet" type="text/css"/>
+    <script type="text/javascript" src='{% static "js/semantic.min.js" %}'></script>
+    <script type="text/javascript">
+
+    </script>
+</head>
+<body>
+    <div id = "title">
+        <h1>{{title.0}}</h1>
+    </div>
+    <h3>By William Shakespeare</h3>
+    <div id = "staff">
+        {% for i in staff %}
+            <p>{{ i.1 }}:{{ i.0 }}</p>
+        {% endfor %}
+    </div>
+    <hr>
+    <div id=" body">
+    <table class="ui table">
+                    <thead>
+                    </thead>
+                    <tbody>
+                        {% for i in body %}
+                        <tr>
+
+                            <td><a href="/sha_poetry_list/{{filename}}@{{forloop.counter}}">Stanza {{ forloop.counter }}</a></td>
+                            <td>{{i}}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+        </table>
+    </div>
+</body>
+
+</html>
