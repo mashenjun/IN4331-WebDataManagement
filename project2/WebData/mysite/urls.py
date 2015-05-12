@@ -20,6 +20,8 @@ urlpatterns = [
     url(r'^eXist/$', 'mysite.views.eXist'),
     url(r'^index/$', 'mysite.views.index'),
     url(r'^main/$', 'mysite.views.main'),
+    url(r'^sha_index/$', 'mysite.views.sha_index'),
+    url(r'^music/$', 'mysite.views.music'),
     url(r'^admin/', include(admin.site.urls)),
-    url(r'^sendrequest/$','mysite.views.sendrequest'),
+    url(r'^sendrequest1/$','mysite.views.sendrequest'),
 ]

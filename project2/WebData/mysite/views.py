@@ -1,4 +1,3 @@
-__author__ = 'alienware'
 
 from django.template.loader import get_template
 from django.shortcuts import render_to_response, render
@@ -8,6 +7,11 @@ from xml.etree import ElementTree
 import os
 import requests
 from eulexistdb import db
+import re
+import subprocess
+import requests
+
+
 
 class TryExist:
     def __init__(self):
@@ -21,39 +25,36 @@ class TryExist:
         return result
 
 ####query for poetry
-quer1 = '''
+
+quer0 = '''
 declare default element namespace "http://www.tei-c.org/ns/1.0";
-let $ms:=doc('/db/apps/shakespeare/data/lov.xml')
+let $ms:=doc('/db/apps/shakespeare/data/'''
+
+quer1 = '''
 for $result in $ms//titleStmt/title
-return $result
+return data($result)
 '''
 
 quer2 = '''
-declare default element namespace "http://www.tei-c.org/ns/1.0";
-let $ms:=doc('apps/shakespeare/data/lov.xml')
 for $result in $ms//titleStmt/respStmt/name
-return $result
+return data($result)
 '''
 
 quer3 = '''
-declare default element namespace "http://www.tei-c.org/ns/1.0";
-let $ms:=doc('apps/shakespeare/data/lov.xml')
 for $result in $ms//titleStmt/respStmt/resp
-return $result
+return data($result)
 '''
 
 quer4 ='''
-declare default element namespace "http://www.tei-c.org/ns/1.0";
-let $ms:=doc('apps/shakespeare/data/lov.xml')
-for $result in $ms//text/body/div/lg/l[1]/text()
-return $result
+for $result in $ms//text/body/div/lg/l[1]
+return data($result)
 '''
 ####query for normal
 query1 = '''
 declare default element namespace "http://www.tei-c.org/ns/1.0";
 let $ms:=doc('/db/apps/shakespeare/data/1h4.xml')
 for $result in $ms//titleStmt/title
-return $result
+return data($result)
 '''
 
 query2 = '''
@@ -65,32 +66,217 @@ return data($result)
 
 query3 = '''
 declare default element namespace "http://www.tei-c.org/ns/1.0";
-let $ms:=doc('apps/shakespeare/data/lov.xml')
+let $ms:=doc('apps/shakespeare/data/lh4.xml')
 for $result in $ms//titleStmt/respStmt/resp
 return data($result)
 '''
 
-query4 ='''
+query_play='''
+xquery version "3.0";
 declare default element namespace "http://www.tei-c.org/ns/1.0";
-let $ms:=doc('apps/shakespeare/data/lov.xml')
-for $result in $ms//text/body/div/lg/l[1]/text()
-return data($result)
+let $ms:=doc('apps/shakespeare/data/1h4.xml')
+for $result in $ms//text/body/div/div
+where $result/@xml:id='sha-1h4101'
+return
+   data($result/head|$result/stage|$result/sp/speaker|$result/sp/l)
+'''
+query_speaker='''
+xquery version "3.0";
+declare default element namespace "http://www.tei-c.org/ns/1.0";
+let $ms:=doc('apps/shakespeare/data/1h4.xml')
+for $result in $ms//text/body/div/div
+where $result/@xml:id='sha-1h4101'
+return
+    data($result/sp/speaker)
 '''
 
-def eXist(request):
+query_dialogue='''
+ declare default element namespace "http://www.tei-c.org/ns/1.0";
+let $ms:=doc('apps/shakespeare/data/1h4.xml')
+for $result in $ms//text/body/div/div/sp
+let $name := $result/speaker
+where $result/../@xml:id='sha-1h4101'
+return data(<b>{$result/l}</b>)
+'''
+# query4 ='''
+# declare default element namespace "http://www.tei-c.org/ns/1.0";
+# let $ms:=doc('apps/shakespeare/data/lov.xml')
+# for $result in $ms//text/body/div/lg/l[1]/text()
+# return data($result)
+# '''
+queryindex1 ='''
+let $ms:=doc('apps/shakespeare/data/work-types.xml')
+for $result in $ms//items/item
+return data($result/label)
+'''
+queryindex2 ='''
+xquery version "3.0";
+let $ms:=doc('apps/shakespeare/data/work-types.xml')
+for $result in $ms//items/item
+return
+   data(<b>{$result/value[1]/text(),' ',$result/value[2]/text(),' ',$result/value[3]/text(),' ',$result/value[4]/text()}</b>)
+   '''
+query4='''
+declare default element namespace "http://www.tei-c.org/ns/1.0";
+let $ms:=doc('apps/shakespeare/data/1h4.xml')
+for $result in $ms//text/body/div/div
+return
+    data(<b>{$result/stage[1]}</b>)
+'''
+test1='''
+declare default element namespace "http://www.tei-c.org/ns/1.0";
+let $ms:=doc('apps/shakespeare/data/1h4.xml')
+for $result in $ms//text/body/div
+return
+      data($result/div/head)
+'''
+test2='''
+declare default element namespace "http://www.tei-c.org/ns/1.0";
+let $ms:=doc('apps/shakespeare/data/1h4.xml')
+for $result in $ms//text/body/div
+return
+      data($result/count(div))
+'''
+
+actor_no='''
+declare default element namespace "http://www.tei-c.org/ns/1.0";
+let $ms:=doc('apps/shakespeare/data/1h4.xml')
+for $result in $ms//text/body/div/div
+return
+      data($result/count(distinct-values($result/sp/speaker)))
+'''
+
+actor_list='''
+declare default element namespace "http://www.tei-c.org/ns/1.0";
+let $ms:=doc('apps/shakespeare/data/1h4.xml')
+for $result in $ms//text/body/div/div
+return
+   distinct-values($result//speaker)
+'''
+
+final='''
+ xquery version "3.0";
+declare default element namespace "http://www.tei-c.org/ns/1.0";
+let $ms:=doc('apps/shakespeare/data/1h4.xml')
+for $result in $ms//text/body/div/div
+return
+    data(
+    <b>{$result/stage[1],'*'}
+        {let $input := <b>{$result/head,$result/sp/speaker}</b>
+    for $value in distinct-values($input/speaker)
+    return <b>{$value,'*'}</b>
+        }
+    </b>)
+'''
+
+
+def sha_index(request):
     a = TryExist()
-    myres = a.get_data(quer1)
-    print myres
-    myres = a.get_data(quer2)
-    print myres
-    myres = a.get_data(quer3)
-    print myres
+    speaker=a.get_data(query_speaker)
+    dialogue=a.get_data(query_dialogue)
+    print len(dialogue)
+    print speaker
+    t = get_template('Xquery_test.html')
+    html = t.render(Context({'type':dialogue}))
+    return HttpResponse(html)
+
+    # a = TryExist()
+    # scene=a.get_data(query_play)
+    # print scene
+
+
+    # a = TryExist()
+    # scene = a.get_data(test1)
+    # final_list=a.get_data(final)
+    # act_no = a.get_data(test2)
+    # b=list()
+    # c=list()
+    # x=0
+    # for num in act_no:
+    #     b.append(final_list[x:x+int(num)])
+    #     c.append(scene[x:x+int(num)])
+    #     x=x+int(num)
+    #
+    #
+    # for i in range(b.__len__()):
+    #     for j in range(len(b[i])):
+    #          b[i][j]=b[i][j].split('*')
+    #          b[i][j].pop()
+    #          temp=b[i][j]
+    #          b[i][j]=[]
+    #          b[i][j].append(temp[0])
+    #          b[i][j].append(','.join(temp[1:]))
+    #
+    #
+    # print c
+    # print b
+    #
+    #
+    #
+    # return HttpResponse("hello world")
+    # a = TryExist()
+    # offset='2'
+    # temp='''let $ms:=doc('apps/shakespeare/data/work-types.xml')
+    # for $result in $ms//items/item['''+offset+''']/id
+    # return  data($result)'''
+    #
+    # print temp
+    # print "???????"
+    # myres22 = a.get_data(temp)[0]
+    #
+    # print myres22
+    # myres22 = myres22.replace('sha-','')+'.xml\')'
+    # query=quer0+myres22+quer4
+    #
+    # myres3 = a.get_data(query)
+    # print myres3
+    # t = get_template('Xquery_test.html')
+    # html=t.render(Context({'type':myres3,'title':myres3}))
+    # return HttpResponse(html)
+    # a = TryExist()
+    # myres2 = a.get_data(queryindex1)
+    # myres = a.get_data(queryindex2)
+    # for j in range(0,len(myres)):
+    #     myres[j]=myres[j].split()
+    #     myres[j]=' , '.join(myres[j])
+    # t = get_template('Xquery_test.html')
+    # html = t.render(Context({'type':myres,'title':myres2}))
+    # print myres2
+    # return HttpResponse(html)
+
+# def querytitle():
+#     a = TryExist()
+#     myres = a.get_data(queryindex1)
+#     print myres
+
+
+def poetry(request):
+    a = TryExist()
     myres = a.get_data(quer4)
     for j in range(0,len(myres)):
         myres[j]=myres[j][1:]
         myres[j]=myres[j].lstrip()
         myres[j]=myres[j].strip()
+        myres[j]=myres[j].translate('!!!','xe')#?????
+    return
+
+
+def eXist(request):
+
+    a = TryExist()
+    myres = a.get_data(queryindex1)
     print myres
+    # myres = a.get_data(quer2)
+    # print myres
+    # myres = a.get_data(quer3)
+    # print myres
+    # myres = a.get_data(quer4)
+    # for j in range(0,len(myres)):
+    #     myres[j]=myres[j][1:]
+    #     myres[j]=myres[j].lstrip()
+    #     myres[j]=myres[j].strip()
+    #     myres[j]=myres[j].replace("xe2","\'")
+    # print myres
 
 
 
@@ -211,5 +397,46 @@ def sendrequest(request):
     return HttpResponse(datastring)
 
 
+def sha_poetry(request,offset):
+    a = TryExist()
+
+    temp='''let $ms:=doc('apps/shakespeare/data/work-types.xml')
+    for $result in $ms//items/item/id[../label=\''''+offset+'\']'+'''
+    return  data($result)'''
+    myres2 = a.get_data(temp)
+    print myres2
+    # sha_title = a.get_data(quer1)
+    # sha_body = a.get_data(quer4)
+    #print etree.fromstring(myres).text
+    # data= requests
+    # print("-------------")
+    # print(sha_body)
+    # print("-------------")
+    # t = get_template('Xquery_test.html')
+    # html = t.render(Context({'content':sha_body}))
+    # return HttpResponse(html)
+
+def sha_npoetry(request,offset):
+    print (offset)
+    t = get_template('sha_npoetry.html')
+    html = t.render(Context({}))
+    return HttpResponse(html)
+
+def music(request):
+    r=requests.get("http://localhost:8080/exist/rest/db/movies/movies.xml", stream=True)
+    local_filename="movie.xml"
+    with open(local_filename, 'wb') as f:
+        for chunk in r.iter_content(chunk_size=1024):
+            if chunk: # filter out keep-alive new chunks
+                f.write(chunk)
+                f.flush()
+
+    # print r.content
+    subprocess.call(["musicxml2ly","lg-5367080.xml"])
+    subprocess.call(["lilypond","lg-5367080.ly"])
+    with open('lg-5367080.pdf', 'r') as pdf:
+        response = HttpResponse(pdf.read(), content_type='application/pdf')
+        response['Content-Disposition'] = 'inline;filename=Music.pdf'
+    return HttpResponse("html")
 
 
