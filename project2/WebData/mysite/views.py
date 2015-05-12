@@ -252,11 +252,21 @@ def sha_index(request):
 
 def poetry(request):
     a = TryExist()
+<<<<<<< HEAD
+=======
+    myres = a.get_data(quer1)
+    print (myres)
+    myres = a.get_data(quer2)
+    print (myres)
+    myres = a.get_data(quer3)
+    print (myres)
+>>>>>>> a4300166ccdeb02e79959702ba4aae51beccb4d8
     myres = a.get_data(quer4)
     for j in range(0,len(myres)):
         myres[j]=myres[j][1:]
         myres[j]=myres[j].lstrip()
         myres[j]=myres[j].strip()
+<<<<<<< HEAD
         myres[j]=myres[j].translate('!!!','xe')#?????
     return
 
@@ -277,6 +287,9 @@ def eXist(request):
     #     myres[j]=myres[j].strip()
     #     myres[j]=myres[j].replace("xe2","\'")
     # print myres
+=======
+    print (myres)
+>>>>>>> a4300166ccdeb02e79959702ba4aae51beccb4d8
 
 
 

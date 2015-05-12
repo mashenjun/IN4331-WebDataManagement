@@ -4,12 +4,144 @@ from django.template.loader import get_template
 from django.shortcuts import render_to_response, render
 from django.http import HttpResponse, Http404, HttpRequest
 from django.template import *
+from django import template
 from xml.etree import ElementTree
+from eulexistdb import db
+from lxml import etree
 import os
 import requests
+import subprocess
+import libxml2
+
+register = template.Library()
+
+class TryExist:
+    def __init__(self):
+        self.db = db.ExistDB(server_url="http://localhost:8080/exist")
+    def get_data(self, query):
+        result = list()
+        qresult = self.db.executeQuery(query)
+        #mresult = self.db.query(query)
+        #print(mresult)
+        hits = self.db.getHits(qresult)
+        for i in range(hits):
+            result.append( str(self.db.retrieve(qresult, i)))
+        return result
+    def get_doc(self, filepath):
+        result = self.db.getDoc(filepath)
+        return result
+    def get_data_string(self,query):
+        result = ""
+        qresult = self.db.executeQuery(query)
+        hits = self.db.getHits(qresult)
+        for i in range(hits):
+            result = result + str(self.db.retrieve(qresult, i))
+        return result
+
+quer0 = '''
+declare default element namespace "http://www.tei-c.org/ns/1.0";
+let $ms:=doc('/db/apps/shakespeare/data/'''
+
+####query for poetry
+quer1 = '''
+for $result in $ms//titleStmt/title
+return data($result)
+'''
+
+quer2 = '''
+for $result in $ms//titleStmt/respStmt/name
+return data($result)
+'''
+
+quer3 = '''
+for $result in $ms//titleStmt/respStmt/resp
+return data($result)
+'''
+
+quer4_1 ='''
+for $result in $ms//text/body/div//lg[@type='stanza']/*[1]
+return data($result/l[1])
+'''
+
+quer4_2 ='''
+for $result in $ms//text/body/div//l[1]/text()
+return data($result)
+'''
+
+querylist_1 ='''
+for $result in $ms//text/body/div/lg['''
+
+querylist_2=''']
+return data($result)
+'''
+
+querylist_son_1='''
+for $result in $ms//text/body/div['''
+
+querylist_son_2=''']
+return data($result/div['''
+
+querylist_son_3=''']/l)'''
+
+final='''
+for $result in $ms//text/body/div/div
+return
+   data(
+   <b>{$result/stage[1],'*'}
+       {let $input := <b>{$result/head,$result/sp/speaker}</b>
+   for $value in distinct-values($input/speaker)
+   return <b>{$value,'*'}</b>
+       }
+   </b>)
+'''
+
+test1='''
+for $result in $ms//text/body/div
+return
+     data($result/div/head)
+'''
+
+test2='''
+for $result in $ms//text/body/div
+return
+     data($result/count(div))
+'''
 
 
+query_speaker_1='''
+for $result in $ms//text/body/div/div
+where $result/@xml:id=\''''
 
+query_speaker_2='''\'
+return
+    data($result/sp/speaker)
+'''
+
+query_dialogue_1='''
+for $result in $ms//text/body/div/div/sp
+let $name := $result/speaker
+where $result/../@xml:id=\''''
+
+query_dialogue_2='''\'
+return
+    data(<b>{$result/(l|ab)}</b>)
+'''
+
+queryindex1 ='''
+let $ms:=doc('apps/shakespeare/data/work-types.xml')
+for $result in $ms//items/item
+where $result/label!='The Two Noble Kinsmen'
+return data($result/label)
+'''
+
+queryindex2 ='''
+xquery version "3.0";
+let $ms:=doc('apps/shakespeare/data/work-types.xml')
+for $result in $ms//items/item
+where $result/label!='The Two Noble Kinsmen'
+return
+data(<b>{$result/value[1]/text(),' ',$result/value[2]/text(),' ',$result/value[3]/text(),' ',$result/value[4]/text()}</b>)
+'''
 
 def viewCSV(request):
     return  render_to_response('viewCSV.html')
@@ -31,11 +163,23 @@ def Result(request):
     return HttpResponse(html)
 
 def Xquerytest(request):
+    a = TryExist()
+    myres = a.get_data(quer4_1)
+
+    #print etree.fromstring(myres).text
+    # data= requests
+    print("-------------")
+    print(myres)
+    print("-------------")
     t = get_template('Xquery_test.html')
-    html = t.render(Context({}))
+    html = t.render(Context({'content':myres}))
     return HttpResponse(html)
 
 def eXist(request):
+    # a = TryExist()
+    # myres = a.get_data(quer1)
+    # print (myres)
+
     director_list = []
     views = get_template('eXisttest.html')
     title = requests.get('http://localhost:8080/exist/rest/db/movies/movies.xml?_query=//title&_warp=no')
@@ -233,3 +377,187 @@ def main(request):
     requests.put(request_url, data=csv_file, params=payload, headers=headers)
     return HttpResponse("Success!!!")
 
+def summary(request, offset):
+    print("---------------")
+    print(str(offset))
+    print("---------------")
+    t = get_template('summary.html')
+    request_content= "http://localhost:8080/exist/rest/db/movies/movies.xml?_query=//movie[title=\""+offset+"\"]/summary"
+    content= requests.get(request_content)
+    print(content.content)
+    if "summary" in content.content:
+        txt = content.content.split("<summary>")[1].split('</summary>')[0]
+        result = txt
+    else :
+        result ='no summary'
+    html = t.render(Context({'content':result}))
+    return HttpResponse(html)
+
+def sha_index(request):
+    a = TryExist()
+    titlewithtype=list()
+    whichtemplate=list()
+    myres2 = a.get_data(queryindex1)
+    myres = a.get_data(queryindex2)
+    mystring_1 = a.get_data_string(queryindex1)
+    mystring_2 = a.get_data_string(queryindex2)
+    print ("############################")
+    print (mystring_1)
+    print ("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~")
+    print (mystring_2)
+    print ("############################")
+    for j in range(0,len(myres)):
+        myres[j]=myres[j].split()
+        myres[j]=' , '.join(myres[j])
+        if "Poetry" in myres[j]:
+
+            whichtemplate.append('/sha_poetry/'+str(j+1 if j+1<27 else j+2))
+        else :
+            whichtemplate.append('/sha_npoetry/'+str(j+1 if j+1<27 else j+2))
+    titlewithtype=zip(myres2,myres,whichtemplate)
+
+    t = get_template('sha_index.html')
+    html = t.render(Context({'title':titlewithtype}))
+    return HttpResponse(html)
+
+def sha_poetry(request,offset):
+    a = TryExist()
+    temp='''let $ms:=doc('apps/shakespeare/data/work-types.xml')
+    for $result in $ms//items/item['''+offset+''']/id
+    return data($result)'''
+    myres2 = a.get_data(temp)[0]
+    myres2 = myres2.replace('sha-','')+'.xml\')'
+    print("##############")
+    print(myres2)
+    print("##############")
+    #query=quer0+myres2+quer2
+    sha_title = a.get_data(quer0+myres2+quer1)
+    sha_name = a.get_data(quer0+myres2+quer2)
+    sha_resp = a.get_data(quer0+myres2+quer3)
+    if str(offset)=="41" or str(offset)=="40":
+        sha_body = a.get_data(quer0+myres2+quer4_1)
+    else :
+        sha_body = a.get_data(quer0+myres2+quer4_2)
+    #print etree.fromstring(myres).text
+    # data= requests
+    print("-------------")
+    print(sha_resp)
+    print("-------------")
+    sha_staff=zip(sha_name,sha_resp)
+    t = get_template('sha_poetry.html')
+    html = t.render(Context({'title': sha_title,'staff':sha_staff,'body':sha_body,'filename':myres2.split('.')[0]}))
+    return HttpResponse(html)
+
+def sha_npoetry(request,offset):
+    print (offset)
+    a = TryExist()
+    temp='''let $ms:=doc('apps/shakespeare/data/work-types.xml')
+    for $result in $ms//items/item['''+offset+''']/id
+    return data($result)'''
+    myres2 = a.get_data(temp)[0]
+    myres2 = myres2.replace('sha-','')+'.xml\')'
+    print("##############")
+    print(myres2)
+    print("##############")
+
+
+    #query=quer0+myres2+quer2
+    sha_title = a.get_data(quer0+myres2+quer1)
+    sha_name = a.get_data(quer0+myres2+quer2)
+    sha_resp = a.get_data(quer0+myres2+quer3)
+
+    scene = a.get_data(quer0+myres2+test1)
+    final_list =a.get_data(quer0+myres2+final)
+    act_no = a.get_data(quer0+myres2+test2)
+    b=list()
+    c=list()
+    x=0
+
+    for num in act_no:
+        b.append(final_list[x:x+int(num)])
+        c.append(scene[x:x+int(num)])
+        x=x+int(num)
+
+
+    for i in range(b.__len__()):
+        for j in range(len(b[i])):
+            b[i][j]=b[i][j].split('*')
+            b[i][j].pop()
+            temp=b[i][j]
+            b[i][j]=[]
+            b[i][j].append(temp[0])
+            b[i][j].append(','.join(temp[1:]))
+
+
+    print c
+    print ('====================')
+    print b
+
+    sha_staff=zip(sha_name,sha_resp)
+    t = get_template('sha_npoetry.html')
+    html = t.render(Context({'title': sha_title,'staff':sha_staff,'body':b,'filename':myres2.split('.')[0]}))
+    return HttpResponse(html)
+
+def sha_poetry_list(request,offset):
+    a = TryExist()
+    #print (str(offset))
+    filename=str(offset).split('@')[0]+'.xml\')'
+    num = str(offset).split('@')[1]
+    num_1 = str(int(num)//20+1)
+    num_2 = str(int(num)%20)
+    if str(offset).__contains__('son'):
+        query = quer0+filename+querylist_son_1+num_1+querylist_son_2+num_2+querylist_son_3
+        new_sha_list=a.get_data(query)
+    else:
+        query= quer0+filename+querylist_1+num+querylist_2
+        sha_list = a.get_data(query)
+        new_sha_list = str(sha_list[0]).split("\n")
+        while '\s' in new_sha_list:
+             new_sha_list.remove('\s')
+
+    # print("#################################")
+    # print(num,num_1,num_2)
+    # print(query)
+    # print (new_sha_list)
+    # print (str(offset))
+    # print("#################################")
+    t = get_template('sha_poetry_list.html')
+    html = t.render(Context({'listcontent':new_sha_list}))
+    return HttpResponse(html)
+
+def sha_npoetry_list(request,offset):
+    print(offset)
+    a = TryExist()
+    new_dialogue=list()
+    filename = str(offset).split('@')[0]+'.xml\')'
+    act = str(offset).split('@')[1]
+    sc = str(offset).split('@')[2]
+    act_sc = 'sha-'+str(offset).split('@')[0]+str(offset).split('@')[1]+'0'+str(offset).split('@')[2]
+    speaker = a.get_data(quer0+filename+query_speaker_1+act_sc+query_speaker_2)
+    dialogue = a.get_data(quer0+filename+query_dialogue_1+act_sc+query_dialogue_2)
+    for i in range(0,len(dialogue)):
+        new_dialogue.append(dialogue[i].split('\n'))
+        print("#################################")
+        print (dialogue[i])
+        print (dialogue[i].split('\n'))
+
+        print("#################################")
+    print(len(new_dialogue))
+    content_list = zip(speaker,new_dialogue)
+    t = get_template('sha_npoetry_list.html')
+    html = t.render(Context({'act_sc':'Act '+act+', Scene '+sc,'content':content_list}))
+    return HttpResponse(html)
+
+def xslttest(request):
+    # with open(os.path.join(os.path.dirname(__file__),'static/cdcatalog.xml'), 'r') as myfile:
+    #     data =myfile.read()
+    xml_tree = etree.parse(os.path.join(os.path.dirname(__file__),'static/cdcatalog.xml'))
+    xslt_tree = etree.XSLT(etree.parse(os.path.join(os.path.dirname(__file__),'static/cdcatalog.xsl')))
+    result_tree = xslt_tree(xml_tree)
+    return HttpResponse(etree.tostring(result_tree))
+
+def pdfreturn(request):
+    a = TryExist()
+    result = etree.fromstring(a.get_doc('/musics/Canoe_Song.xml'))
+    subprocess.call(["musicxml2ly",result])
+    return HttpResponse();

@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+{% load static %}
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title></title>
+    <script type="text/javascript" src='{% static "js/jquery-1.11.2.min.js" %}'></script>
+    <link href='{% static "CSS/semantic.min.css" %}' rel="stylesheet" type="text/css"/>
+    <script type="text/javascript" src='{% static "js/semantic.min.js" %}'></script>
+    <script type="text/javascript">
+
+    </script>
+</head>
+<body>
+    <div id = "title">
+            <h1>{{title.0}}</h1>
+        </div>
+        <h3>By William Shakespeare</h3>
+        <div id = "staff">
+            {% for i in staff %}
+                <p>{{ i.1 }}:{{ i.0 }}</p>
+            {% endfor %}
+        </div>
+        <hr>
+        <div id=" body">
+            {% for act in body%}
+            <h4>
+                Act {{forloop.counter}}
+            </h4>
+            <div class=" sc">
+                {% for sc in act %}
+                <a href="/sha_npoetry_list/{{filename}}@{{forloop.parentloop.counter}}@{{forloop.counter}}">
+                    Act{{forloop.parentloop.counter}},Scene {{forloop.counter}}
+                </a>
+
+                    <p>
+                        {{sc.0}}
+                    </p>
+                    <p>
+                        Speaker:{{sc.1}}
+                    </p>
+
+                {% endfor %}
+            </div>
+
+            {% endfor%}
+    </div>
+</body>
+</html>

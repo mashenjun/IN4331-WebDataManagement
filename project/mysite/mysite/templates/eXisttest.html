@@ -5,8 +5,6 @@
         <script type="text/javascript" src='{% static "js/jquery-1.11.2.min.js" %}'></script>
 <script type="text/javascript">
 
-
-
         function submit1(){
         var par1=document.getElementById("title").value;
 
@@ -31,7 +29,8 @@
                         var htmlcontent=""
                         for (var i =0;i<res.length;i++){
                             var summaryurl = "http://localhost:8080/exist/rest/db/movies/movies.xml?_query=//movie[title=\""+res[i]+"\"]/summary/text()"
-                            var herfcontent = '<a href=\''+summaryurl+'\'>'+res[i]+'</a>'
+                            var newsummaryurl = "/Xquerytest/summary/"+res[i];
+                            var herfcontent = '<a href=\''+newsummaryurl+'\'>'+res[i]+'</a>'
                             htmlcontent = htmlcontent+ herfcontent+ '<br>'
 
                         }
@@ -40,7 +39,8 @@
 
                     else {
                     var summaryurl= "http://localhost:8080/exist/rest/db/movies/movies.xml?_query=//movie[title=\""+ret+"\"]/summary/text()"
-                    $("#result").html('<a href=\''+summaryurl+'\'>'+ret+'</a>');
+                    var newsummaryurl = "/Xquerytest/summary/"+ret;
+                    $("#result").html('<a href=\''+newsummaryurl+'\'>'+ret+'</a>');
                     }
 
                 });
