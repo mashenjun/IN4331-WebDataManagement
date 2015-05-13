@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?xml-stylesheet type="text/xsl" href="cdcatalog.xsl"?>
+<result xmlns:exist="http://exist.sourceforge.net/NS/exist">
+    <collection name="/db/musics" created="2015-05-12T20:50:45.241+02:00" owner="admin" group="admin" permissions="rwxr-xr-x">
+        <resource name="Canoe_Song.xml" created="2015-05-12T20:51:21.801+02:00" last-modified="2015-05-12T20:51:21.801+02:00" owner="admin" group="admin" permissions="rw-r--r--"/>
+        <resource name="An_die_ferne_Geliebte.xml" created="2015-05-13T01:54:57.293+02:00" last-modified="2015-05-13T01:54:57.293+02:00" owner="admin" group="admin" permissions="rw-r--r--"/>
+        <resource name="Binchois.xml" created="2015-05-13T01:55:00.133+02:00" last-modified="2015-05-13T01:55:00.133+02:00" owner="admin" group="admin" permissions="rw-r--r--"/>
+        <resource name="Bohemian_Rhapsody.xml" created="2015-05-13T01:55:01.345+02:00" last-modified="2015-05-13T01:55:01.345+02:00" owner="admin" group="admin" permissions="rw-r--r--"/>
+        <resource name="New_Beginnings.xml" created="2015-05-13T01:55:03.019+02:00" last-modified="2015-05-13T01:55:03.019+02:00" owner="admin" group="admin" permissions="rw-r--r--"/>
+        <resource name="Pase_el_agoa.xml" created="2015-05-13T01:55:04.46+02:00" last-modified="2015-05-13T01:55:04.46+02:00" owner="admin" group="admin" permissions="rw-r--r--"/>
+        <resource name="Santiano.xml" created="2015-05-13T01:55:04.846+02:00" last-modified="2015-05-13T01:55:04.846+02:00" owner="admin" group="admin" permissions="rw-r--r--"/>
+        <resource name="Thad_Lizzy_the_Pair.xml" created="2015-05-13T01:55:06.79+02:00" last-modified="2015-05-13T01:55:06.79+02:00" owner="admin" group="admin" permissions="rw-r--r--"/>
+        <resource name="The_Winner_of_the_Race.xml" created="2015-05-13T01:55:07.246+02:00" last-modified="2015-05-13T01:55:07.246+02:00" owner="admin" group="admin" permissions="rw-r--r--"/>
+        <resource name="Yesterday.xml" created="2015-05-13T01:55:08.816+02:00" last-modified="2015-05-13T01:55:08.816+02:00" owner="admin" group="admin" permissions="rw-r--r--"/>
+    </collection>
+</result>

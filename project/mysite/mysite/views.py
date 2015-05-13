@@ -335,7 +335,6 @@ def sendrequest(request):
     return HttpResponse(datastring)
 
 def getsummery(request):
-
     return HttpResponse()
 
 def main(request):
@@ -419,6 +418,12 @@ def sha_index(request):
     t = get_template('sha_index.html')
     html = t.render(Context({'title':titlewithtype}))
     return HttpResponse(html)
+
+def addtag(x,y):
+    result= list();
+    for i in range(0,len(y)):
+        result.append("<"+x+">"+str(y[i])+"</"+x+">")
+    return result
 
 def sha_poetry(request,offset):
     a = TryExist()
@@ -551,8 +556,8 @@ def sha_npoetry_list(request,offset):
 def xslttest(request):
     # with open(os.path.join(os.path.dirname(__file__),'static/cdcatalog.xml'), 'r') as myfile:
     #     data =myfile.read()
-    xml_tree = etree.parse(os.path.join(os.path.dirname(__file__),'static/cdcatalog.xml'))
-    xslt_tree = etree.XSLT(etree.parse(os.path.join(os.path.dirname(__file__),'static/cdcatalog.xsl')))
+    xml_tree = etree.parse(os.path.join(os.path.dirname(__file__),'static/xslt/cdcatalog.xml'))
+    xslt_tree = etree.XSLT(etree.parse(os.path.join(os.path.dirname(__file__),'static/xslt/cdcatalog.xsl')))
     result_tree = xslt_tree(xml_tree)
     return HttpResponse(etree.tostring(result_tree))
 
@@ -561,3 +566,43 @@ def pdfreturn(request):
     result = etree.fromstring(a.get_doc('/musics/Canoe_Song.xml'))
     subprocess.call(["musicxml2ly",result])
     return HttpResponse();
+
+def music_index(request):
+    head = '<?xml version="1.0" encoding="UTF-8"?> ' \
+           '<?xml-stylesheet type="text/xsl" href="cdcatalog.xsl"?>'
+    music_filename_xml = head+requests.get('http://localhost:8080/exist/rest/db/musics').content.replace("exist:","")
+    music_filename_xml_1 = music_filename_xml.replace(".xml","")
+    print music_filename_xml
+    t = get_template('music_index.html')
+    xml_tree = etree.fromstring(music_filename_xml_1)
+    xslt_tree = etree.XSLT(etree.parse(os.path.join(os.path.dirname(__file__),'static/xslt/cdcatalog.xsl')))
+    data = xslt_tree(xml_tree)
+    html = t.render(Context({"data":etree.tostring(data)}))
+    return HttpResponse(etree.tostring(data));
+
+def music_PDF(request,offest):
+    fake=str(offest)
+    url_file="http://localhost:8080/exist/rest/db/music/"+fake+".xml"
+    r=requests.get(url_file, stream=True)
+    local_filename=fake+".xml"
+    with open(local_filename, 'wb') as f:
+        for chunk in r.iter_content(chunk_size=1024):
+            if chunk: # filter out keep-alive new chunks
+                f.write(chunk)
+                f.flush()
+    # print os.path.dirname(os.path.abspath(__file__))
+
+    os.system('rm *.pdf')
+
+    subprocess.call(["musicxml2ly",local_filename])
+    subprocess.call(["musicxml2ly",local_filename])
+    subprocess.call(["lilypond",fake+".ly"])
+
+    os.remove(fake+".ly")
+    os.remove(fake+".xml")
+
+    with open(fake+'.pdf', 'r') as pdf:
+        response = HttpResponse(pdf.read(), content_type='application/pdf')
+        response['Content-Disposition'] = 'inline;filename=Music.pdf'
+    # return HttpResponse("html")
+    return response
