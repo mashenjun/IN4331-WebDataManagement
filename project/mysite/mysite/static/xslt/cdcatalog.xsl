@@ -9,13 +9,23 @@
         <xsl:attribute name="rel">stylesheet</xsl:attribute>
         <xsl:attribute name="href">/static/CSS/semantic.min.css</xsl:attribute>
       </link>
+        <link>
+        <xsl:attribute name="type">text/css</xsl:attribute>
+        <xsl:attribute name="rel">stylesheet</xsl:attribute>
+        <xsl:attribute name="href">/static/CSS/loading.css</xsl:attribute>
+      </link>
       <xsl:text disable-output-escaping="yes">&lt;script src="/static/js/semantic.min.js" language="Javascript"</xsl:text><xsl:text disable-output-escaping="yes"> &gt;</xsl:text><xsl:text disable-output-escaping="yes">&lt;/script&gt;</xsl:text>
+      <xsl:text disable-output-escaping="yes">&lt;script src="http://www.midijs.net/lib/midi.js" language="javascript" </xsl:text><xsl:text disable-output-escaping="yes"> &gt;</xsl:text><xsl:text disable-output-escaping="yes">&lt;/script&gt;</xsl:text>
       <script>
         <xsl:attribute name="type">text/javascript</xsl:attribute>
-              function popitup(url) {
-          newwindow=window.open(url,'{{title}}','height=200,width=150');
-          if (window.focus) {newwindow.focus()}
-          return false;
+              function create_and_play(url) {
+
+                $.get("/create_midi/",{'url':url},function(result){
+                console.log('/static/'+url+'.midi');
+                MIDIjs.play('/static/'+url+'.midi');
+          });
+
+
           }
       </script>
     </head>
@@ -23,7 +33,8 @@
       <h2>My Music Collection</h2>
         <table class="ui table">
           <tr>
-            <th style="text-align:left">Name</th>
+                <th style="text-align:left">Name</th>
+              <th style="text-align:left">Option</th>
           </tr>
           <xsl:for-each select="result/collection/resource">
           <tr>
@@ -33,10 +44,26 @@
               <xsl:attribute name="target">_blank</xsl:attribute>
             		<xsl:value-of select="@name"/>
             	</a>
+
             </td>
+              <td>
+                  <a>
+            	<xsl:attribute name="href">#</xsl:attribute>
+                      <xsl:attribute name="style">text-decoration: none</xsl:attribute>
+                <xsl:attribute name="onClick">create_and_play("<xsl:value-of select="@name"/>");</xsl:attribute>
+            		Play
+            	</a>
+                  <a>
+            	<xsl:attribute name="href">#</xsl:attribute>
+                      <xsl:attribute name="style">text-decoration: none</xsl:attribute>
+                <xsl:attribute name="onClick">MIDIjs.stop();</xsl:attribute>
+            		Stop
+            	</a>
+              </td>
           </tr>
           </xsl:for-each>
         </table>
+
     </body>
   </html>
 </xsl:template>
