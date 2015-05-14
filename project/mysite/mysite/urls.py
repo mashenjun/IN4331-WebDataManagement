@@ -24,6 +24,7 @@ urlpatterns = patterns('',
     url(r'^pdfreturn/$', 'mysite.views.pdfreturn'),
     url(r'^index/$', 'mysite.views.index'),
     url(r'^main/$', 'mysite.views.main'),
+    url(r'^create_midi/$', 'mysite.views.create_midi'),
     url(r'^sendrequest/$','mysite.views.sendrequest'),
     url(r'^admin/', include(admin.site.urls)),
 

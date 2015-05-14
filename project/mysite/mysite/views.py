@@ -12,6 +12,7 @@ import os
 import requests
 import subprocess
 import libxml2
+import shutil
 
 register = template.Library()
 
@@ -586,24 +587,57 @@ def music_PDF(request,offest):
     url_file="http://localhost:8080/exist/rest/db/musics/"+fake+".xml"
     r=requests.get(url_file, stream=True)
     local_filename=fake+".xml"
+
     with open(local_filename, 'wb') as f:
         for chunk in r.iter_content(chunk_size=1024):
             if chunk: # filter out keep-alive new chunks
                 f.write(chunk)
                 f.flush()
-    # print os.path.dirname(os.path.abspath(__file__))
+    print os.path.dirname(os.path.abspath(__file__))
 
     os.system('rm *.pdf')
+    os.system('rm *.midi')
 
-    subprocess.call(["musicxml2ly",local_filename])
-    subprocess.call(["musicxml2ly",local_filename])
+    subprocess.call(["musicxml2ly","-m",local_filename])
     subprocess.call(["lilypond",fake+".ly"])
 
     os.remove(fake+".ly")
     os.remove(fake+".xml")
+    shutil.move(fake+".midi", os.path.dirname(os.path.abspath(__file__))+"/static/"+fake+".midi")
 
     with open(fake+'.pdf', 'r') as pdf:
         response = HttpResponse(pdf.read(), content_type='application/pdf')
         response['Content-Disposition'] = 'inline;filename=Music.pdf'
     # return HttpResponse("html")
     return response
+
+def create_midi(request):
+    fake=str(request.GET['url'])
+    url_file="http://localhost:8080/exist/rest/db/musics/"+fake+".xml"
+    r=requests.get(url_file, stream=True)
+    local_filename=fake+".xml"
+
+    with open(local_filename, 'wb') as f:
+        for chunk in r.iter_content(chunk_size=1024):
+            if chunk: # filter out keep-alive new chunks
+                f.write(chunk)
+                f.flush()
+    print os.path.dirname(os.path.abspath(__file__))
+
+    os.system('rm *.pdf')
+    os.system('rm *.midi')
+
+    subprocess.call(["musicxml2ly","-m",local_filename])
+    subprocess.call(["lilypond",fake+".ly"])
+
+    os.remove(fake+".ly")
+    os.remove(fake+".xml")
+    shutil.move(fake+".midi", os.path.dirname(os.path.abspath(__file__))+"/static/"+fake+".midi")
+
+    with open(fake+'.pdf', 'r') as pdf:
+        response = HttpResponse(pdf.read(), content_type='application/pdf')
+        response['Content-Disposition'] = 'inline;filename=Music.pdf'
+    # return HttpResponse("html")
+    return HttpResponse("success")
+
+
