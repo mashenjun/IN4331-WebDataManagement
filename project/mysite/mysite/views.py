@@ -577,12 +577,13 @@ def music_index(request):
     xml_tree = etree.fromstring(music_filename_xml_1)
     xslt_tree = etree.XSLT(etree.parse(os.path.join(os.path.dirname(__file__),'static/xslt/cdcatalog.xsl')))
     data = xslt_tree(xml_tree)
-    html = t.render(Context({"data":etree.tostring(data)}))
+    tag = "<h1>Hello</h1>"
+    # html = t.render(Context({"data":tag}))
     return HttpResponse(etree.tostring(data));
 
 def music_PDF(request,offest):
     fake=str(offest)
-    url_file="http://localhost:8080/exist/rest/db/music/"+fake+".xml"
+    url_file="http://localhost:8080/exist/rest/db/musics/"+fake+".xml"
     r=requests.get(url_file, stream=True)
     local_filename=fake+".xml"
     with open(local_filename, 'wb') as f:
