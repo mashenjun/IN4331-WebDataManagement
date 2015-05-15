@@ -1,5 +1,8 @@
 __author__ = 'alienware'
 
+import os
+# os.environ['DJANGO_SETTINGS_MODULE'] = 'localsettings.py'
+
 from django.template.loader import get_template
 from django.shortcuts import render_to_response, render
 from django.http import HttpResponse, Http404, HttpRequest
@@ -8,7 +11,7 @@ from django import template
 from xml.etree import ElementTree
 from eulexistdb import db
 from lxml import etree
-import os
+
 import requests
 import subprocess
 import libxml2
@@ -16,9 +19,10 @@ import shutil
 
 register = template.Library()
 
+
 class TryExist:
     def __init__(self):
-        self.db = db.ExistDB(server_url="http://localhost:8080/exist")
+        self.db = db.ExistDB()
     def get_data(self, query):
         result = list()
         qresult = self.db.executeQuery(query)
@@ -38,6 +42,19 @@ class TryExist:
         for i in range(hits):
             result = result + str(self.db.retrieve(qresult, i))
         return result
+
+    def store_file(self,file=None):
+        return self.db.load('''<code-table xml:id="access-condition-type-code">
+    <code-table-name>work-types</code-table-name>
+    <basis> http://shakespeare.about.com/od/theplays/a/Tragedy_Comedy_History.htm,
+        http://www.nosweatshakespeare.com/shakespeare-plays/play-types/,
+        http://shakespeare.nuvvo.com/lesson/4448-shakespeare-plays-comedies-tragedies-histories,
+        http://www.examiner.com/article/shakespeare-101-how-are-shakespeare-s-plays-classified</basis>
+    <description/>
+    <items>
+    </items>
+    </code-table>'''
+    ,"musics/a.xml",True)
 
 quer0 = '''
 declare default element namespace "http://www.tei-c.org/ns/1.0";
@@ -569,6 +586,7 @@ def pdfreturn(request):
     return HttpResponse();
 
 def music_index(request):
+
     head = '<?xml version="1.0" encoding="UTF-8"?> ' \
            '<?xml-stylesheet type="text/xsl" href="cdcatalog.xsl"?>'
     music_filename_xml = head+requests.get('http://localhost:8080/exist/rest/db/musics').content.replace("exist:","")
@@ -639,5 +657,41 @@ def create_midi(request):
         response['Content-Disposition'] = 'inline;filename=Music.pdf'
     # return HttpResponse("html")
     return HttpResponse("success")
+
+
+query_lyric1='''
+<result>
+{
+let $ms:=doc('/db/musics/'''
+
+query_lyric2='''
+for $result in $ms//lyric
+return $result
+}
+</result>
+'''
+
+query_lyric3='''
+<result>
+{
+let $ms:=doc('/db/musics/Binchois.xml')
+for $result in $ms//lyric
+return ($result)
+}
+</result>
+'''
+def music_Lyric(request,offset):
+    a = TryExist()
+    fake=str(offset)
+    head = '<?xml version="1.0" encoding="UTF-8"?> ' \
+           '<?xml-stylesheet type="text/xsl" href="cdcatalog.xsl"?>'
+
+    # lyric_filename_xml=head+a.get_data_string(query_lyric1+fake+".xml')"+query_lyric2).replace("exist:","")
+    lyric_filename_xml=a.get_data_string(query_lyric1+fake+".xml')"+query_lyric2)
+    xml_tree = etree.fromstring(lyric_filename_xml)
+    xslt_tree = etree.XSLT(etree.parse(os.path.join(os.path.dirname(__file__),'static/xslt/lyricmusic.xsl')))
+    data = xslt_tree(xml_tree)
+    # return  HttpResponse("http")
+    return HttpResponse(etree.tostring(data))
 
 

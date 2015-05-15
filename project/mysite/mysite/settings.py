@@ -30,6 +30,10 @@ TEMPLATE_DEBUG = True
 
 ALLOWED_HOSTS = []
 
+EXISTDB_SERVER_USER ='admin'
+EXISTDB_SERVER_PASSWORD ='123456'
+EXISTDB_SERVER_URL = "http://localhost:8080/exist"
+EXISTDB_ROOT_COLLECTION = "/db"
 
 # Application definition
 
@@ -41,6 +45,8 @@ INSTALLED_APPS = (
     'django.contrib.messages',
     'django.contrib.staticfiles',
 )
+
+
 
 MIDDLEWARE_CLASSES = (
     'django.contrib.sessions.middleware.SessionMiddleware',

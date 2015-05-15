@@ -16,54 +16,30 @@
       </link>
       <xsl:text disable-output-escaping="yes">&lt;script src="/static/js/semantic.min.js" language="Javascript"</xsl:text><xsl:text disable-output-escaping="yes"> &gt;</xsl:text><xsl:text disable-output-escaping="yes">&lt;/script&gt;</xsl:text>
       <xsl:text disable-output-escaping="yes">&lt;script src="http://www.midijs.net/lib/midi.js" language="javascript" </xsl:text><xsl:text disable-output-escaping="yes"> &gt;</xsl:text><xsl:text disable-output-escaping="yes">&lt;/script&gt;</xsl:text>
-      <script>
-        <xsl:attribute name="type">text/javascript</xsl:attribute>
-              function create_and_play(url) {
+      <!--<script>-->
+        <!--<xsl:attribute name="type">text/javascript</xsl:attribute>-->
 
-                $.get("/create_midi/",{'url':url},function(result){
-                console.log('/static/'+url+'.midi');
-                MIDIjs.play('/static/'+url+'.midi');
-          });
-
-
-          }
-      </script>
+      <!--</script>-->
     </head>
     <body>
-      <h2>My Music Collection</h2>
+      <h2>My Music List</h2>
         <table class="ui table">
           <tr>
-                <th style="text-align:left">Name</th>
-              <th style="text-align:left">Option</th>
+                <th style="text-align:left">Syllabic</th>
+              <th style="text-align:left">Text</th>
           </tr>
-          <xsl:for-each select="result/collection/resource">
+          <xsl:for-each select="//lyric">
           <tr>
             <td>
-            	<a>
-            	<xsl:attribute name="href">/music_PDF/<xsl:value-of select="@name"/></xsl:attribute>
-              <xsl:attribute name="target">_blank</xsl:attribute>
-            		<xsl:value-of select="@name"/>
-            	</a>
+            	<p>
+            		<xsl:value-of select="syllabic/text()"/>
+            	</p>
 
             </td>
               <td>
-                  <a>
-            	<xsl:attribute name="href">#</xsl:attribute>
-                      <xsl:attribute name="style">text-decoration: none</xsl:attribute>
-                <xsl:attribute name="onClick">create_and_play("<xsl:value-of select="@name"/>");</xsl:attribute>
-            		Play
-            	</a>
-                  <a>
-            	<xsl:attribute name="href">#</xsl:attribute>
-                      <xsl:attribute name="style">text-decoration: none</xsl:attribute>
-                <xsl:attribute name="onClick">MIDIjs.stop();</xsl:attribute>
-            		Stop
-            	</a>
-                  <a>
-            	<xsl:attribute name="href">/music_Lyric/<xsl:value-of select="@name"/></xsl:attribute>
-                      <xsl:attribute name="style">text-decoration: none</xsl:attribute>
-            		Lyric
-            	</a>
+                  <p>
+            		<xsl:value-of select="text/text()"/>
+            	</p>
               </td>
           </tr>
           </xsl:for-each>
