@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+{% load static %}
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <script type="text/javascript" src='{% static "js/jquery-1.11.2.min.js" %}'></script>
+    <script type="text/javascript">
+
+    $(document).ready(
+    function(){
+
+        document.getElementById('id_file').onchange = uploadOnChange;
+        function uploadOnChange() {
+            var filename = this.value;
+            var lastIndex = filename.lastIndexOf("\\");
+            if (lastIndex >= 0) {
+                filename = filename.substring(lastIndex + 1);
+            }
+            document.getElementById('uploadform').setAttribute("action","/upload_file/"+filename+"/");
+            }
+        }
+    );
+
+    </script>
+    <title></title>
+</head>
+<body>
+<form id="uploadform" enctype="multipart/form-data" method="POST" action="/upload_file/">
+    <!--{% csrf_token %}-->
+    {{form.as_p}}
+  <input type="submit" value="Upload" id="b_submit">
+</form>
+</body>
+</html>

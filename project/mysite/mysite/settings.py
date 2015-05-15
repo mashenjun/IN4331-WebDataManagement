@@ -23,6 +23,12 @@ TEMPLATE_DIRS = (
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = '4osdgxgbpn5++xo&ql*h$g0xx1ugc3tqq+=m%gtyuk@^hi-t*i'
 
+#Exist DB Settings
+EXISTDB_SERVER_USER = 'admin'
+EXISTDB_SERVER_PASSWORD = '123456'
+EXISTDB_SERVER_URL = "http://127.0.1.1:8080/exist"
+EXISTDB_ROOT_COLLECTION = ""
+
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
@@ -42,15 +48,19 @@ INSTALLED_APPS = (
     'django.contrib.staticfiles',
 )
 
+TEMPLATE_CONTEXT_PROCESSORS =(
+    # 'django.core.context_processors.csrf',
+    'django.contrib.auth.context_processors.auth',
+)
+
 MIDDLEWARE_CLASSES = (
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
-    'django.middleware.csrf.CsrfViewMiddleware',
+    # 'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.auth.middleware.SessionAuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    'django.middleware.csrf.CsrfViewMiddleware'
 )
 
 ROOT_URLCONF = 'mysite.urls'
@@ -91,6 +101,6 @@ STATICFILES_DIRS = (
     STATIC_PATH,
 )
 
-CORS_ORIGIN_ALLOW_ALL = True
+CSRF_COOKIE_SECURE = False
 
 PROJECT_ROOT = os.path.abspath(os.path.dirname(__file__))

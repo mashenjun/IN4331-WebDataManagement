@@ -19,7 +19,6 @@
       <script>
         <xsl:attribute name="type">text/javascript</xsl:attribute>
               function create_and_play(url) {
-
                 $.get("/create_midi/",{'url':url},function(result){
                 console.log('/static/'+url+'.midi');
                 MIDIjs.play('/static/'+url+'.midi');
@@ -58,6 +57,12 @@
                       <xsl:attribute name="style">text-decoration: none</xsl:attribute>
                 <xsl:attribute name="onClick">MIDIjs.stop();</xsl:attribute>
             		Stop
+            	</a>
+                  <a>
+            	<xsl:attribute name="href">#</xsl:attribute>
+                      <xsl:attribute name="style">text-decoration: none</xsl:attribute>
+                <xsl:attribute name="onClick"></xsl:attribute>
+            		Lyric
             	</a>
               </td>
           </tr>

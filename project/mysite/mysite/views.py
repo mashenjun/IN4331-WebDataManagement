@@ -14,11 +14,10 @@ import subprocess
 import libxml2
 import shutil
 
-register = template.Library()
 
 class TryExist:
     def __init__(self):
-        self.db = db.ExistDB(server_url="http://localhost:8080/exist")
+        self.db = db.ExistDB()
     def get_data(self, query):
         result = list()
         qresult = self.db.executeQuery(query)
@@ -38,6 +37,9 @@ class TryExist:
         for i in range(hits):
             result = result + str(self.db.retrieve(qresult, i))
         return result
+    def upload_to_exist(self,file,path):
+        self.db.load(file,path)
+        return
 
 quer0 = '''
 declare default element namespace "http://www.tei-c.org/ns/1.0";
