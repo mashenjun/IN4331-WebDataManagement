@@ -31,6 +31,7 @@ urlpatterns = patterns('',
     url(r'^remove_file/([a-zA-Z\d_]+)/$', 'mysite.views.remove_file'),
     url(r'^sendrequest/$','mysite.views.sendrequest'),
     url(r'^lyric/$','mysite.views.lyric_index'),
+    url(r'^search/$','mysite.views.lyric_search'),
     url(r'^admin/', include(admin.site.urls)),
 
 )

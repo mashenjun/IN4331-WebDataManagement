@@ -15,35 +15,36 @@
         <xsl:attribute name="href">/static/CSS/loading.css</xsl:attribute>
       </link>
       <xsl:text disable-output-escaping="yes">&lt;script src="/static/js/semantic.min.js" language="Javascript"</xsl:text><xsl:text disable-output-escaping="yes"> &gt;</xsl:text><xsl:text disable-output-escaping="yes">&lt;/script&gt;</xsl:text>
-      <xsl:text disable-output-escaping="yes">&lt;script src="http://www.midijs.net/lib/midi.js" language="javascript" </xsl:text><xsl:text disable-output-escaping="yes"> &gt;</xsl:text><xsl:text disable-output-escaping="yes">&lt;/script&gt;</xsl:text>
-      <!--<script>-->
-        <!--<xsl:attribute name="type">text/javascript</xsl:attribute>-->
+      <xsl:text disable-output-escaping="yes">&lt;script src="/static/js/midi.js" language="javascript" </xsl:text><xsl:text disable-output-escaping="yes"> &gt;</xsl:text><xsl:text disable-output-escaping="yes">&lt;/script&gt;</xsl:text>
+      <script>
+        <xsl:attribute name="type">text/javascript</xsl:attribute>
 
-      <!--</script>-->
+        <xsl:text disable-output-escaping="yes">
+
+          </xsl:text>
+      </script>
     </head>
     <body>
-      <h2>My Music List</h2>
-        <table class="ui table">
+      <h2 align="center">Lyric Search Outcome</h2>
+
+        <table  class="ui table" style="width:100%">
           <tr>
-                <th style="text-align:left">Syllabic</th>
-              <th style="text-align:left">Text</th>
+                <th style="text-align:center">
+                    Name1
+                </th>
           </tr>
-          <xsl:for-each select="//lyric">
+          <xsl:for-each select="result/work-title">
           <tr>
-            <td>
-            	<p>
-            		<xsl:value-of select="syllabic/text()"/>
+              <td align="center">
+                  <p>
+                    <xsl:value-of select="text()"/>
             	</p>
 
-            </td>
-              <td>
-                  <p>
-            		<xsl:value-of select="text/text()"/>
-            	</p>
               </td>
           </tr>
           </xsl:for-each>
         </table>
+
 
 
 

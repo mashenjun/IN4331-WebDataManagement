@@ -721,3 +721,12 @@ def remove_file(request,offset):
     a=TryExist()
     a.remove_doc_exist("/db/musics/"+name+".xml")
     return HttpResponseRedirect('/music_index/')
+
+def lyric_search(request):
+    fake=str(request.GET['lyric'])
+    temp=requests.get("http://localhost:8080/exist/rest/db/musics?_query=//work-title[../..//lyric/text='"+fake+"']").content.replace('exist:','')
+    xml_tree = etree.fromstring(temp)
+    xslt_tree = etree.XSLT(etree.parse(os.path.join(os.path.dirname(__file__),'static/xslt/lyrics_list.xsl')))
+    print temp
+    data = xslt_tree(xml_tree)
+    return HttpResponse(etree.tostring(data))
