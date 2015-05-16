@@ -1,18 +1,22 @@
 __author__ = 'alienware'
 
+import os
+# os.environ['DJANGO_SETTINGS_MODULE'] = 'localsettings.py'
+
 from django.template.loader import get_template
 from django.shortcuts import render_to_response, render
-from django.http import HttpResponse, Http404, HttpRequest
+from django.http import HttpResponse, Http404, HttpRequest, HttpResponseRedirect
 from django.template import *
 from django import template
 from xml.etree import ElementTree
 from eulexistdb import db
 from lxml import etree
-import os
+from .form import UploadFileForm
 import requests
 import subprocess
 import libxml2
 import shutil
+
 
 
 class TryExist:
@@ -40,6 +44,22 @@ class TryExist:
     def upload_to_exist(self,file,path):
         self.db.load(file,path)
         return
+    def remove_doc_exist(self,file_path):
+        self.db.removeDocument(file_path)
+        return
+
+    def store_file(self,file=None):
+        return self.db.load('''<code-table xml:id="access-condition-type-code">
+    <code-table-name>work-types</code-table-name>
+    <basis> http://shakespeare.about.com/od/theplays/a/Tragedy_Comedy_History.htm,
+        http://www.nosweatshakespeare.com/shakespeare-plays/play-types/,
+        http://shakespeare.nuvvo.com/lesson/4448-shakespeare-plays-comedies-tragedies-histories,
+        http://www.examiner.com/article/shakespeare-101-how-are-shakespeare-s-plays-classified</basis>
+    <description/>
+    <items>
+    </items>
+    </code-table>'''
+    ,"musics/a.xml",True)
 
 quer0 = '''
 declare default element namespace "http://www.tei-c.org/ns/1.0";
@@ -575,14 +595,15 @@ def music_index(request):
            '<?xml-stylesheet type="text/xsl" href="cdcatalog.xsl"?>'
     music_filename_xml = head+requests.get('http://localhost:8080/exist/rest/db/musics').content.replace("exist:","")
     music_filename_xml_1 = music_filename_xml.replace(".xml","")
-    print music_filename_xml
-    t = get_template('music_index.html')
     xml_tree = etree.fromstring(music_filename_xml_1)
     xslt_tree = etree.XSLT(etree.parse(os.path.join(os.path.dirname(__file__),'static/xslt/cdcatalog.xsl')))
     data = xslt_tree(xml_tree)
-    tag = "<h1>Hello</h1>"
+
     # html = t.render(Context({"data":tag}))
-    return HttpResponse(etree.tostring(data));
+    t=Template(etree.tostring(data))
+    form = UploadFileForm()
+    html = t.render(Context({"form":form}))
+    return HttpResponse(html);
 
 def music_PDF(request,offest):
     fake=str(offest)
@@ -643,3 +664,60 @@ def create_midi(request):
     return HttpResponse("success")
 
 
+query_lyric1='''
+<result>
+{
+let $ms:=doc('/db/musics/'''
+
+query_lyric2='''
+for $result in $ms//lyric
+return $result
+}
+</result>
+'''
+
+query_lyric3='''
+<result>
+{
+let $ms:=doc('/db/musics/Binchois.xml')
+for $result in $ms//lyric
+return ($result)
+}
+</result>
+'''
+def music_Lyric(request,offset):
+    a = TryExist()
+    fake=str(offset)
+    head = '<?xml version="1.0" encoding="UTF-8"?> ' \
+           '<?xml-stylesheet type="text/xsl" href="cdcatalog.xsl"?>'
+
+    # lyric_filename_xml=head+a.get_data_string(query_lyric1+fake+".xml')"+query_lyric2).replace("exist:","")
+    lyric_filename_xml=a.get_data_string(query_lyric1+fake+".xml')"+query_lyric2)
+    xml_tree = etree.fromstring(lyric_filename_xml)
+    xslt_tree = etree.XSLT(etree.parse(os.path.join(os.path.dirname(__file__),'static/xslt/lyricmusic.xsl')))
+    data = xslt_tree(xml_tree)
+    # return  HttpResponse("http")
+    return HttpResponse(etree.tostring(data))
+
+def handle_uploaded_file(f,name):
+    print "/db/musics/"+name
+    a = TryExist()
+    a.upload_to_exist(f,"/db/musics/"+name)
+    # destination= open(os.path.join(os.path.dirname(__file__),'static/'+name),'wb+')
+    # for chunk in f.chunks():
+    #     destination.write(chunk)
+
+def upload_file(request,offset):
+    if request.method =='POST':
+        form = UploadFileForm(request.POST, request.FILES)
+        if form.is_valid():
+            handle_uploaded_file(request.FILES['file'],offset)
+            return HttpResponseRedirect('/music_index/')
+    else:
+        return HttpResponse("Error 404 page not found")
+
+def remove_file(request,offset):
+    name =offset
+    a=TryExist()
+    a.remove_doc_exist("/db/musics/"+name+".xml")
+    return HttpResponseRedirect('/music_index/')
