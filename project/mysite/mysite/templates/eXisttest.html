@@ -3,6 +3,7 @@
 <html>
     <head>
         <script type="text/javascript" src='{% static "js/jquery-1.11.2.min.js" %}'></script>
+        <link href='{% static "CSS/loading.css" %}' rel="stylesheet" type="text/css"/>
 <script type="text/javascript">
 
         function submit1(){
@@ -49,8 +50,10 @@
 
 </script>
     </head>
-    
-    <body>
+
+    <body body style="text-align:center;" >
+        <h2 align="center" >Assignment 1</h2>
+        <div style="width:600px;margin-left:auto;margin-right:auto;">
          <form>
             <!--First name:<br>-->
         <!--<input type="text" name="firstname" value="Mickey">-->
@@ -110,10 +113,17 @@
         <textarea cols="30" rows="4" style="font-size:1.5em" id="keyword" placeholder="Key-words"></textarea>
 
             <br><br>
-        <button type="button" onclick="submit1()">Submit</button>
+        <button type="button" id=" upload" name="upload" onclick="submit1()">Submit</button>
 
 
 </form>
+</div>
+
+            <hr/>
+        Result:
+        <div>
+
     <div id="result"></div>
+        </div>
     </body>
 </html>

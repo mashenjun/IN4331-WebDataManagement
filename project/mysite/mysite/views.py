@@ -14,7 +14,6 @@ from lxml import etree
 from .form import UploadFileForm
 import requests
 import subprocess
-import libxml2
 import shutil
 
 
