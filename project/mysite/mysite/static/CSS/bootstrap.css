@@ -4784,7 +4784,7 @@ a.label:focus {
 }
 .label-success[href]:hover,
 .label-success[href]:focus {
-  background-color: #128f76;
+  background-color: #000066;
 }
 .label-info {
   background-color: #3498db;

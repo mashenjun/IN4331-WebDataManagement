@@ -2,7 +2,8 @@
 <html>
 <head>
     <script type="text/javascript" src='{% static "js/jquery-1.11.2.min.js" %}'></script>
-    <link href='{% static "CSS/loading.css" %}' rel="stylesheet" type="text/css"/>
+        <link href='{% static "CSS/loading.css" %}' rel="stylesheet" type="text/css"/>
+     <link rel="stylesheet" type="text/css" href='{% static "CSS/bootstrap.css" %}' />
     <script type="text/javascript">
 
     </script>
@@ -10,13 +11,15 @@
 
 <body >
 <h1 align="center">Summary</h1>
-<div style="text-align:center;">
-    <a style="text-align:center;" href="/eXist/">back</a>
-</div>
+
 
 <hr/>
-<div style="width:600px;margin-left:auto;margin-right:auto;">
+<div class="form-group" style="width:600px;margin-left:auto;margin-right:auto;font-size: 25px">
    {{content}}
+</div>
+
+<div style="text-align:center;">
+    <a class="btn btn-default" style="text-align:center; font-size: 20px" href="/eXist/">back</a>
 </div>
 </body>
 
