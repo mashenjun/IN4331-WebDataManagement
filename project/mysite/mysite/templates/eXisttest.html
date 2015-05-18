@@ -2,7 +2,10 @@
 {% load static %}
 <html>
     <head>
+
         <script type="text/javascript" src='{% static "js/jquery-1.11.2.min.js" %}'></script>
+        <script type="text/javascript" src='{% static "js/bootstrap.min.js" %}'></script>
+        <link rel="stylesheet" type="text/css" href='{% static "CSS/bootstrap.css" %}' media="screen" />
 <script type="text/javascript">
 
         function submit1(){
@@ -51,69 +54,97 @@
     </head>
     
     <body>
-         <form>
+    <div class="col-lg-8">
+         <form class="form-horizontal">
             <!--First name:<br>-->
         <!--<input type="text" name="firstname" value="Mickey">-->
             <!--<br>-->
             <!--Last name:<br>-->
         <!--<input type="text" name="lastname" value="Mouse">-->
-           <br>
+             <br>
+         <div class="form-group">
 
-            Title:<br>
-        <select id="title">
+             <label  class="col-lg-2 control-label">Title:</label>
+          <div class="col-lg-10">
+        <select class="form-control" id="title">
         <option value="">please slecte a title</option>
             {% for element in title %}
 　       <option value="{{element.text}}">{{ element.text }}</option>
             {%endfor%}
         </select>
-            <br>
 
-            Genre:<br>
-        <select id="genre">
+             </div>
+ </div>
+               <div class="form-group">
+             <label  class="col-lg-2 control-label">Genre:</label>
+             <div class="col-lg-10">
+        <select class="form-control" id="genre">
             <option value="">please slecte a genre</option>
             {% for element in genre %}
 　       <option value="{{element.text}}">{{ element.text }}</option>
             {%endfor%}
         </select>
-            <br>
-
-            Director:<br>
-        <select id="director">
+            </div>
+ </div>
+             <div class="form-group">
+             <label  class="col-lg-2 control-label">Director:</label>
+        <div class="col-lg-10">
+        <select class="form-control" id="director">
             <option value="">please slecte a director</option>
             {% for element in director %}
 　       <option value="{{element}}">{{ element }}</option>
             {%endfor%}
         </select>
+             </div>
+              </div>
             <br>
 
 
-
-           Actors:<br>
-        <select multiple id="actors" size="12">
+     <div class="form-group">
+     <label  class="col-lg-2 control-label">Actors:</label>
+                 <div class="col-lg-10">
+        <select multiple  class="form-control" id="actors" size="12">
 
             {% for element in actors %}
 　       <option value="{{element}}">{{ element }}</option>
             {%endfor%}
         </select>
-            <br>
+           </div>
+         </div>
 
-            Years:<br>
-        <select id="years">
+        <div class="form-group">
+         <label  class="col-lg-2 control-label">Years:</label>
+             <div class="col-lg-10">
+        <select class="form-control" id="years">
             <option value="">please slecte a year</option>
             {% for element in years %}
 　       <option value={{element}}>{{ element}}</option>
             {%endfor%}
         </select>
+        </div>
+            </div>
+            <div class="form-group">
+             <label  class="col-lg-2 control-label"> Key word in Summary:</label>
+                <div class="col-lg-10">
+        <input  class="form-control input-lg" type="text" id="keyword" placeholder="Key-words"></textarea>
 
-            <br/>
-             Key word in Summary:<br>
-        <textarea cols="30" rows="4" style="font-size:1.5em" id="keyword" placeholder="Key-words"></textarea>
-
-            <br><br>
-        <button type="button" onclick="submit1()">Submit</button>
-
-
+            <br>
+                    <br>
+                 <button type="button" class="btn btn-primary" onclick="submit1()">Submit</button>
+            </div>
+            </div>
+              <div class="form-group">
+                   <label  class="col-lg-2 control-label"></label>
+                 <div class="col-lg-10">
+                    <div class="col-lg-10" style="background:#F0F0F5" id="result"></div>
+                     </div>
+                  </div>
+             <div style="height: 100px;" class="col-lg-10">
+             </div>
 </form>
-    <div id="result"></div>
+
+</div>
+
+
     </body>
 </html>
