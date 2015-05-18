@@ -108,10 +108,10 @@
         <table cellpadding="0px" cellspacing="0px">
         <tr>
             <td>
-            Search for Lyric
+            Search for Lyric:
         </td>
         <td style="border-style:solid none solid solid;border-color:#4B7B9F;border-width:1px;">
-        <input type="text" name="lyric" style="width:150px; border:0px solid; height:20px; padding:5px 5px; position:relative;"/>
+        <input type="text" name="lyric" style="width:150px; border:0px solid; height:20px; padding:0px 0px; position:relative;"/>
         </td>
         <td style="border-style:solid;border-color:#4B7B9F;border-width:2px;">
         <input type="submit" value="" style="border-style: none; background: url('/static/searchbutton3.gif') no-repeat; width: 24px; height: 20px;"/>
