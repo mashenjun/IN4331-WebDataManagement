@@ -1,6 +1,4 @@
-<<<<<<< HEAD
+
 .idea/
 *.iml
-=======
-.idea/
->>>>>>> d65aa6cf934935707ed08bf5ff1b325ed51e75ee
+*.pyc

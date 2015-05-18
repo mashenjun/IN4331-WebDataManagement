@@ -26,8 +26,8 @@ SECRET_KEY = '4osdgxgbpn5++xo&ql*h$g0xx1ugc3tqq+=m%gtyuk@^hi-t*i'
 #Exist DB Settings
 EXISTDB_SERVER_USER = 'admin'
 EXISTDB_SERVER_PASSWORD = '123456'
-EXISTDB_SERVER_URL = "http://127.0.1.1:8080/exist"
-EXISTDB_ROOT_COLLECTION = ""
+EXISTDB_SERVER_URL = "http://localhost:8080/exist"
+EXISTDB_ROOT_COLLECTION = "/db"
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -36,10 +36,6 @@ TEMPLATE_DEBUG = True
 
 ALLOWED_HOSTS = []
 
-EXISTDB_SERVER_USER ='admin'
-EXISTDB_SERVER_PASSWORD ='123456'
-EXISTDB_SERVER_URL = "http://localhost:8080/exist"
-EXISTDB_ROOT_COLLECTION = "/db"
 
 # Application definition
 
