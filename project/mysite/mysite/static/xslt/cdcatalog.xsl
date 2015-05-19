@@ -10,10 +10,10 @@
         <xsl:attribute name="href">/static/CSS/semantic.min.css</xsl:attribute>
       </link>
         <link>
-        <xsl:attribute name="type">text/css</xsl:attribute>
-        <xsl:attribute name="rel">stylesheet</xsl:attribute>
-        <xsl:attribute name="href">/static/CSS/loading.css</xsl:attribute>
-      </link>
+            <xsl:attribute name="type">text/css</xsl:attribute>
+            <xsl:attribute name="rel">stylesheet</xsl:attribute>
+            <xsl:attribute name="href">/static/CSS/bootstrap.css</xsl:attribute>
+        </link>
       <xsl:text disable-output-escaping="yes">&lt;script src="/static/js/semantic.min.js" language="Javascript"</xsl:text><xsl:text disable-output-escaping="yes"> &gt;</xsl:text><xsl:text disable-output-escaping="yes">&lt;/script&gt;</xsl:text>
       <xsl:text disable-output-escaping="yes">&lt;script src="http://www.midijs.net/lib/midi.js" language="javascript" </xsl:text><xsl:text disable-output-escaping="yes"> &gt;</xsl:text><xsl:text disable-output-escaping="yes">&lt;/script&gt;</xsl:text>
       <script>
@@ -46,19 +46,21 @@
           </xsl:text>
       </script>
     </head>
-    <body>
-      <h2>My Music Collection</h2>
+    <body background="/static/eight.png">
+      <h2 align="center">My Music Collection</h2>
         <hr/>
-        <form id="uploadform" enctype="multipart/form-data" method="POST" action="/upload_file/">
+        <form  id="uploadform" enctype="multipart/form-data" method="POST" action="/upload_file/">
+             <div align="center" class="form-group">
     <!--{% csrf_token %}-->
             {{form.as_p}}
-        <input type="submit" value="Upload" id="b_submit"/>
+        <input class="btn btn-default" type="submit" value="Upload" id="b_submit"/>
+            </div>
         </form>
         <hr/>
-        <table class="ui table">
-          <tr>
-                <th style="text-align:left">Name</th>
-              <th style="text-align:left">Option</th>
+        <table class="table table-striped table-hover">
+          <tr class="info">
+                <th style="text-align:left;color:white">Name</th>
+              <th style="text-align:left;color:white">Option</th>
           </tr>
           <xsl:for-each select="result/collection/resource">
           <tr>
@@ -103,18 +105,19 @@
         </table>
 
         <hr/>
-        <form method="get" action="/search/" target="_blank">
+        <form class="form-horizontal" method="get" action="/search/" target="_blank">
 
         <table cellpadding="0px" cellspacing="0px">
-        <tr>
-            <td>
+        <tr align="center">
+            <td height="30px">
+
             Search for Lyric:
         </td>
-        <td style="border-style:solid none solid solid;border-color:#4B7B9F;border-width:1px;">
-        <input type="text" name="lyric" style="width:150px; border:0px solid; height:20px; padding:0px 0px; position:relative;"/>
+        <td height="32px" style="border-style:solid none solid solid;border-color:#4B7B9F;border-width:1px;">
+        <input type="text" name="lyric" style="width:150px; border:0px solid; height:32px; padding:0px 0px; position:relative;"/>
         </td>
-        <td style="border-style:solid;border-color:#4B7B9F;border-width:2px;">
-        <input type="submit" value="" style="border-style: none; background: url('/static/searchbutton3.gif') no-repeat; width: 24px; height: 20px;"/>
+        <td height="32px" style="border-style:solid;border-color:#4B7B9F;border-width:1px;">
+        <input type="submit" value=""  style="border-style: none; background: url('/static/searchbutton3.png') no-repeat; width: 32px; height: 32px;"/>
         </td>
         </tr>
         </table>
