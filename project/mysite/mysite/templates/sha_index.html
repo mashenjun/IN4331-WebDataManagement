@@ -5,8 +5,8 @@
     <meta charset="UTF-8">
     <title>Shakespeare's Works </title>
     <script type="text/javascript" src='{% static "js/jquery-1.11.2.min.js" %}'></script>
-    <link href='{% static "CSS/semantic.min.css" %}' rel="stylesheet" type="text/css"/>
-    <script type="text/javascript" src='{% static "js/semantic.min.js" %}'></script>
+    <script type="text/javascript" src='{% static "js/bootstrap.min.js" %}'></script>
+    <link rel="stylesheet" type="text/css" href='{% static "CSS/bootstrap.css" %}' media="screen" />
     <link href='{% static "CSS/loading.css" %}' rel="stylesheet" type="text/css"/>
     <script type="text/javascript">
 
@@ -14,12 +14,12 @@
 
 </head>
 <body>
-    <h1>Shakespeare's Works in TEI</h1>
+    <h1 align="center">Shakespeare's Works in TEI</h1>
     <div id="content">
-        <h2>List of Works</h2>
-        <table class="ui table">
+        <h2 align="center">List of Works</h2>
+        <table class="table table-striped table-hover">
                     <thead>
-                        <tr>
+                        <tr class="info">
                             <th></th>
                             <th>Title</th>
                             <th>Work Type</th>

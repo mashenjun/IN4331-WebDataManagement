@@ -729,3 +729,6 @@ def lyric_search(request):
     print temp
     data = xslt_tree(xml_tree)
     return HttpResponse(etree.tostring(data))
+
+def web_data_index(request):
+    return  render_to_response('Web_data_index.html')

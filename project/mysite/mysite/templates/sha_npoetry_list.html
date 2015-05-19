@@ -1,17 +1,28 @@
 <!DOCTYPE html>
 {% load static %}
-<html>
+<html xmlns="http://www.w3.org/1999/html">
 <head lang="en">
     <meta charset="UTF-8">
     <link href='{% static "CSS/loading.css" %}' rel="stylesheet" type="text/css"/>
+    <script type="text/javascript" src='{% static "js/bootstrap.min.js" %}'></script>
+    <link rel="stylesheet" type="text/css" href='{% static "CSS/bootstrap.css" %}' media="screen" />
+    <style>
+            .col-center-block {
+        float: none;
+        display: block;
+        margin-left: auto;
+        margin-right: auto;
+    }
+    </style>
     <title></title>
 </head>
 <body>
-        <a href="/sha_index/">
-            home
-            </a>
-    <h1>{{act_sc}}</h1>
-    <div id="place"></div>
+        <ul class="pager" >
+          <li><a href="/sha_index/">home</a></li>
+        </ul>
+    <h1 align="center">{{act_sc}}</h1>
+        <div class="col-lg-4 col-center-block">
+            <div id="place"></div>
     <div id="dialogue">
         {% for i in content %}
         <h3>{{i.0}}</h3>
@@ -20,5 +31,8 @@
             {%endfor%}
         {%endfor%}
     </div>
+
+        </div>
+
 </body>
 </html>

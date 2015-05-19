@@ -5,8 +5,9 @@
 
         <script type="text/javascript" src='{% static "js/jquery-1.11.2.min.js" %}'></script>
         <script type="text/javascript" src='{% static "js/bootstrap.min.js" %}'></script>
+
         <link rel="stylesheet" type="text/css" href='{% static "CSS/bootstrap.css" %}' media="screen" />
-        <script type="text/javascript" src='{% static "js/jquery.vide.min.js" %}'></script>
+        <link href='{% static "CSS/loading.css" %}' rel="stylesheet" type="text/css"/>
 
 <script type="text/javascript">
 
@@ -64,9 +65,9 @@
     </head>
     
     <body >
-    <div class="col-lg-9" data-vide-bg='{% static "video/Clouds-Time.mp4" %}' data-vide-options="loop: true, muted: false, position: 0% 0%" style='width: 100%;' >
+
     <div class="col-lg-8 col-center-block" style='margin-left:auto;margin-right:auto;' >
-        <h1 align="center" style="color:white" >Assignment1</h1>
+        <h1 align="center"  >Assignment1</h1>
          <form class="form-horizontal">
 
             <!--First name:<br>-->
@@ -77,7 +78,7 @@
              <br>
          <div class="form-group">
 
-             <label  class="col-lg-2 control-label" style="color:white">Title:</label>
+             <label  class="col-lg-2 control-label" style="">Title:</label>
           <div class="col-lg-10">
         <select class="form-control" id="title">
         <option value="">please slecte a title</option>
@@ -89,7 +90,7 @@
              </div>
  </div>
                <div class="form-group">
-             <label  class="col-lg-2 control-label" style="color:white">Genre:</label>
+             <label  class="col-lg-2 control-label" style="">Genre:</label>
              <div class="col-lg-10">
         <select class="form-control" id="genre">
             <option value="">please slecte a genre</option>
@@ -100,7 +101,7 @@
             </div>
  </div>
              <div class="form-group">
-             <label  class="col-lg-2 control-label" style="color:white">Director:</label>
+             <label  class="col-lg-2 control-label" style="">Director:</label>
         <div class="col-lg-10">
         <select class="form-control" id="director">
             <option value="">please slecte a director</option>
@@ -114,7 +115,7 @@
 
 
      <div class="form-group">
-     <label  class="col-lg-2 control-label" style="color:white">Actors:</label>
+     <label  class="col-lg-2 control-label" style="">Actors:</label>
                  <div class="col-lg-10">
         <select multiple  class="form-control" id="actors" size="12">
 
@@ -126,7 +127,7 @@
          </div>
 
         <div class="form-group">
-         <label  class="col-lg-2 control-label" style="color:white">Years:</label>
+         <label  class="col-lg-2 control-label" style="">Years:</label>
              <div class="col-lg-10">
         <select class="form-control" id="years">
             <option value="">please slecte a year</option>
@@ -137,7 +138,7 @@
         </div>
             </div>
             <div class="form-group">
-             <label  class="col-lg-2 control-label" style="color:white"> Key word in Summary:</label>
+             <label  class="col-lg-2 control-label" style=""> Key word in Summary:</label>
                 <div class="col-lg-10">
         <input  class="form-control input-lg" type="text" id="keyword" placeholder="Key-words"></textarea>
 
@@ -155,8 +156,6 @@
              <div style="height: 100px;" class="col-lg-10">
              </div>
 </form>
-
-</div>
 
 </div>
 
