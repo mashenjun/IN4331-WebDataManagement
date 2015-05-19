@@ -9,17 +9,38 @@
         <script type="text/javascript" src='{% static "js/bootstrap.min.js" %}'></script>
         <link rel="stylesheet" type="text/css" href='{% static "CSS/bootstrap.css" %}' media="screen" />
         <script type="text/javascript" src='{% static "js/jquery.vide.min.js" %}'></script>
-        <style type="text/css">
-        #container{  
+        <link href='http://fonts.googleapis.com/css?family=Open+Sans:400italic,400,300,600,700' rel='stylesheet' type='text/css'>
 
+    <link href=" {% static 'owl_carousel/assets/css/bootstrapTheme.css' %}" rel="stylesheet" type="text/css">
+    <link href=" {% static 'owl_carousel/assets/css/custom.css' %}" rel="stylesheet" type="text/css">
+
+    <!-- Owl Carousel Assets -->
+    <link href=" {% static 'owl_carousel/owl-carousel/owl.carousel.css' %}" rel="stylesheet" type="text/css">
+    <link href=" {% static 'owl_carousel/owl-carousel/owl.theme.css' %}" rel="stylesheet" type="text/css">
+
+    <link href=" {% static 'owl_carousel/assets/js/google-code-prettify/prettify.css' %}" rel="stylesheet" type="text/css">
+
+    <!-- Le fav and touch icons -->
+         <!--<script src="../assets/js/jquery-1.9.1.min.js"></script> -->
+    <script src="{% static 'owl_carousel/owl-carousel/owl.carousel.js ' %}"></script>
+    <script src="{% static 'owl_carousel/assets/js/bootstrap-collapse.js ' %}"></script>
+    <script src="{% static 'owl_carousel/assets/js/bootstrap-transition.js ' %}"></script>
+    <script src="{% static 'owl_carousel/assets/js/bootstrap-tab.js ' %}"></script>
+
+    <script src="{% static 'owl_carousel/assets/js/google-code-prettify/prettify.js ' %}"></script>
+    <script src="{% static 'owl_carousel/assets/js/application.js ' %}"></script>
+
+
+        <style type="text/css">
+        #container{
             margin-left:auto;  
             margin-right:auto;  
             width:800px;  
         }  
 
-        #button{  
+        .buttonuser{
             position: relative;
-            top:500px;
+            top:700px;
         }
             #bg{
             width:100%;
@@ -34,23 +55,96 @@
             }
 
             .col-center-block {
-    float: none;
-    display: block;
-    margin-left: auto;
-    margin-right: auto;
+    float:none;
+    display:block;
+            margin-left: auto;
+                margin-right: auto;
+
 }
     </style>
+<script>
+    $(document).ready(function() {
 
+  var owl = $("#owl-demo");
+
+  owl.owlCarousel({
+      items : 1, //10 items above 1000px browser width
+      itemsDesktop : [1000,5], //5 items between 1000px and 901px
+      itemsDesktopSmall : [900,3], // betweem 900px and 601px
+      itemsTablet: [600,2], //2 items between 600 and 0
+      itemsMobile : false // itemsMobile disabled - inherit from itemsTablet option
+  });
+
+  // Custom Navigation Events
+
+
+  owl.trigger('owl.play',2000);
+});
+
+</script>
+
+        <style>
+            #owl-demo .item{
+            top:300px;
+  background: white;
+            opacity: 0.5;
+  padding: 30px 0px;
+  margin: 50px 30px 30px 30px;
+  color: #FFF;
+  -webkit-border-radius: 3px;
+  -moz-border-radius: 3px;
+  border-radius: 3px;
+  text-align: center;
+   height:500px;
+}
+.customNavigation{
+  text-align: center;
+}
+//use styles below to disable ugly selection
+.customNavigation a{
+  -webkit-user-select: none;
+  -khtml-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+}
+            .inner{
+                display: inline-block;
+                margin-left: auto;
+                margin-right: auto;
+            }
+            .a1{background-image: url("{% static '1.jpg' %}"); important;}
+            .a2{background-image: url("{% static '2.jpg' %}"); important;}
+            .a3{background-image: url("{% static '3.jpg' %}"); important;}
+        </style>
     </head>
     
     <body>
 
-    <div id="bg" data-vide-bg='{% static "video/Clouds-Time" %}' data-vide-options="loop: true, muted: false, position: 0% 0%">
-        <div class="col-lg-4 col-center-block">
-            <a class="btn btn-success" id="button" href='/eXist/'>    Assignment1    </a>
-            <a class="btn btn-success" id="button" href ='/sha_index/'>    Assignment2    </a>
-			<a class="btn btn-success" id="button" href ='/music_index/' >    Assignment3     </a>
+    <div id="bg"  data-vide-bg='{% static "video/Clouds-Time" %}' data-vide-options="loop: true, muted: false, position: 0% 0%">
+        <div class="outer">
+            <div class="col-lg-4 col-center-block" align="center">
+            <a class="btn btn-success buttonuser"  href='/eXist/'>    Assignment1    </a>
+            <a class="btn btn-success buttonuser"  href ='/sha_index/'>    Assignment2    </a>
+			<a class="btn btn-success buttonuser"  href ='/music_index/' >    Assignment3     </a>
             </div>
+
+            </div>
+
+        <div id="owl-demo" class="owl-carousel owl-theme">
+  <div  class="item a1"><a href ='/eXist/'><img src="{% static '1.jpg' %}" height="400"></a></div>
+  <div  class="item a2"><a href ='/sha_index/'><img  src=" {% static '2.jpg' %}" height="400"></a></div>
+  <div  class="item a3"><a href ='/music_index/'><img  src="{% static '3.jpg' %}" height="400"></a></div>
+
     </div>
+    <div class="customNavigation">
+  <!--<a class="btn prev">Previous</a>-->
+  <!--<a class="btn next">Next</a>-->
+  <!--<a class="btn play">Autoplay</a>-->
+  <!--<a class="btn stop">Stop</a>-->
+    </div>
+</div>
+
     </body>
 </html>
