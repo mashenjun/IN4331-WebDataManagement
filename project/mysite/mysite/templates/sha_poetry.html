@@ -4,7 +4,7 @@
     <script type="text/javascript" src='{% static "js/jquery-1.11.2.min.js" %}'></script>
     <script type="text/javascript" src='{% static "js/bootstrap.min.js" %}'></script>
     <link rel="stylesheet" type="text/css" href='{% static "CSS/bootstrap.css" %}' media="screen" />
-    <link href='{% static "CSS/loading.css" %}' rel="stylesheet" type="text/css"/>
+
                     <style>
     .col-center-block {
         float: none;
@@ -15,12 +15,18 @@
 
     </style>
     <script type="text/javascript">
+        function send(str){
+
+        $.get("/sha_poetry_list/"+str,{'body':"ererere"},function(result){
+
+          });
+        }
 
     </script>
 </head>
-<body>
+<body background="/static/eight.png">
     <ul class="pager" >
-          <li><a href="/sha_index/">home</a></li>
+          <li><a href="/sha_index/">back</a></li>
         </ul>
     <div id = "title">
         <h1 align="center">{{title.0}}</h1>
@@ -43,7 +49,7 @@
                         {% for i in body %}
                         <tr>
 
-                            <td><a href="/sha_poetry_list/{{filename}}@{{forloop.counter}}">Stanza {{ forloop.counter }}</a></td>
+                            <td><a href="/sha_poetry_list/{{filename}}@{{forloop.counter}}_{{title.0}}_{{num}}" onclick="">Stanza {{ forloop.counter }}</a></td>
                             <td>{{i}}</td>
                         </tr>
                         {% endfor %}

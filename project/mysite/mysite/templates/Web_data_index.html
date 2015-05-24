@@ -40,7 +40,7 @@
 
         .buttonuser{
             position: relative;
-            top:700px;
+            top:620px;
         }
             #bg{
             width:100%;
@@ -85,11 +85,10 @@
 
         <style>
             #owl-demo .item{
-            top:300px;
   background: white;
             opacity: 0.5;
   padding: 30px 0px;
-  margin: 50px 30px 30px 30px;
+  margin: 10px 30px 30px 30px;
   color: #FFF;
   -webkit-border-radius: 3px;
   -moz-border-radius: 3px;
@@ -121,21 +120,19 @@
     </head>
     
     <body>
-
     <div id="bg"  data-vide-bg='{% static "video/Clouds-Time" %}' data-vide-options="loop: true, muted: false, position: 0% 0%">
         <div class="outer">
-            <div class="col-lg-4 col-center-block" align="center">
+            <div align="center">
             <a class="btn btn-success buttonuser"  href='/eXist/'>    Assignment1    </a>
             <a class="btn btn-success buttonuser"  href ='/sha_index/'>    Assignment2    </a>
 			<a class="btn btn-success buttonuser"  href ='/music_index/' >    Assignment3     </a>
             </div>
-
-            </div>
+        </div>
 
         <div id="owl-demo" class="owl-carousel owl-theme">
-  <div  class="item a1"><a href ='/eXist/'><img src="{% static '1.jpg' %}" height="400"></a></div>
-  <div  class="item a2"><a href ='/sha_index/'><img  src=" {% static '2.jpg' %}" height="400"></a></div>
-  <div  class="item a3"><a href ='/music_index/'><img  src="{% static '3.jpg' %}" height="400"></a></div>
+      <div  class="item a1"><a href ='/eXist/'><img src="{% static '1.jpg' %}" height="400"></a></div>
+      <div  class="item a2"><a href ='/sha_index/'><img  src=" {% static '2.jpg' %}" height="400"></a></div>
+      <div  class="item a3"><a href ='/music_index/'><img  src="{% static '3.jpg' %}" height="400"></a></div>
 
     </div>
     <div class="customNavigation">
@@ -145,6 +142,5 @@
   <!--<a class="btn stop">Stop</a>-->
     </div>
 </div>
-
     </body>
 </html>

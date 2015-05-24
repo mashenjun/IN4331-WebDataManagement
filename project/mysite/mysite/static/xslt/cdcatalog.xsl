@@ -4,25 +4,25 @@
   <html>
     <head>
       <xsl:text disable-output-escaping="yes">&lt;script src="/static/js/jquery-1.11.2.min.js" language="Javascript"</xsl:text><xsl:text disable-output-escaping="yes"> &gt;</xsl:text><xsl:text disable-output-escaping="yes">&lt;/script&gt;</xsl:text>
-      <link>
-        <xsl:attribute name="type">text/css</xsl:attribute>
-        <xsl:attribute name="rel">stylesheet</xsl:attribute>
-        <xsl:attribute name="href">/static/CSS/semantic.min.css</xsl:attribute>
-      </link>
+      <!--<link>-->
+        <!--<xsl:attribute name="type">text/css</xsl:attribute>-->
+        <!--<xsl:attribute name="rel">stylesheet</xsl:attribute>-->
+        <!--<xsl:attribute name="href">/static/CSS/semantic.min.css</xsl:attribute>-->
+      <!--</link>-->
         <link>
             <xsl:attribute name="type">text/css</xsl:attribute>
             <xsl:attribute name="rel">stylesheet</xsl:attribute>
             <xsl:attribute name="href">/static/CSS/bootstrap.css</xsl:attribute>
         </link>
-      <xsl:text disable-output-escaping="yes">&lt;script src="/static/js/semantic.min.js" language="Javascript"</xsl:text><xsl:text disable-output-escaping="yes"> &gt;</xsl:text><xsl:text disable-output-escaping="yes">&lt;/script&gt;</xsl:text>
+      <xsl:text disable-output-escaping="yes">&lt;script src="/static/js/bootstrap.min.js" language="Javascript"</xsl:text><xsl:text disable-output-escaping="yes"> &gt;</xsl:text><xsl:text disable-output-escaping="yes">&lt;/script&gt;</xsl:text>
       <xsl:text disable-output-escaping="yes">&lt;script src="http://www.midijs.net/lib/midi.js" language="javascript" </xsl:text><xsl:text disable-output-escaping="yes"> &gt;</xsl:text><xsl:text disable-output-escaping="yes">&lt;/script&gt;</xsl:text>
       <script>
         <xsl:attribute name="type">text/javascript</xsl:attribute>
 
         <xsl:text disable-output-escaping="yes">
           $(document).ready(
-    function(){
-
+            function(){
+                <!--document.getElementById('id_file').setAttribute("class","btn")-->
                 document.getElementById('id_file').onchange = uploadOnChange;
                 function uploadOnChange() {
                     var filename = this.value;
@@ -34,6 +34,7 @@
                     }
                 }
             );
+
               function create_and_play(url) {
                 $.get("/create_midi/",{'url':url},function(result){
                 console.log('/static/'+url+'.midi');
@@ -47,6 +48,9 @@
       </script>
     </head>
     <body background="/static/eight.png">
+        <ul class="pager" >
+          <li><a href="/web_data_index/">home</a></li>
+        </ul>
       <h2 align="center">My Music Collection</h2>
         <hr/>
         <form  id="uploadform" enctype="multipart/form-data" method="POST" action="/upload_file/">

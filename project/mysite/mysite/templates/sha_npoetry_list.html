@@ -3,7 +3,7 @@
 <html xmlns="http://www.w3.org/1999/html">
 <head lang="en">
     <meta charset="UTF-8">
-    <link href='{% static "CSS/loading.css" %}' rel="stylesheet" type="text/css"/>
+
     <script type="text/javascript" src='{% static "js/bootstrap.min.js" %}'></script>
     <link rel="stylesheet" type="text/css" href='{% static "CSS/bootstrap.css" %}' media="screen" />
     <style>
@@ -16,23 +16,61 @@
     </style>
     <title></title>
 </head>
-<body>
+<body background="/static/eight.png">
         <ul class="pager" >
-          <li><a href="/sha_index/">home</a></li>
+          <li><a href="/sha_index/">back</a></li>
         </ul>
-    <h1 align="center">{{act_sc}}</h1>
-        <div class="col-lg-4 col-center-block">
-            <div id="place"></div>
-    <div id="dialogue">
-        {% for i in content %}
-        <h3>{{i.0}}</h3>
-            {% for t in i.1 %}
-            <p>{{t}}</p>
-            {%endfor%}
-        {%endfor%}
-    </div>
 
+    <h1 align="center">{{act_sc}}</h1>
+
+        <div class="container-fluid">
+          <div class="row-fluid">
+              <div class="col-lg-8">
+                  <div align="center"><a href="/sha_npoetry/{{num}}">{{father}}</a></div>
+                    <div class="col-lg-4 col-center-block">
+
+                    <div id="dialogue">
+                        {% for i in content %}
+                            <h3>{{i.0}}</h3>
+                            {% for t in i.1 %}
+                                <p>{{t}}</p>
+                            {%endfor%}
+                        {%endfor%}
+                    </div>
+                </div>
+                  <div align="center"><a href="/sha_npoetry/{{num}}">{{father}}</a></div>
         </div>
+                  </div>
+
+
+        <div class="col-lg-4">
+            <div class="panel panel-primary">
+                <div class="panel-heading">
+                    <h3 class="panel-title">Panel primary</h3>
+                </div>
+                <div class="panel-body">
+                    {% for act in body%}
+            <h4>
+                Act {{forloop.counter}}
+            </h4>
+            <div class=" sc">
+                {% for sc in act %}
+                <a href="/sha_npoetry_list/{{filename}}@{{forloop.parentloop.counter}}@{{forloop.counter}}">
+                    Act{{forloop.parentloop.counter}},Scene {{forloop.counter}}
+                </a><br>
+
+                {% endfor %}
+            </div>
+
+            {% endfor%}
+                </div>
+            </div>
+        </div>
+          </div>
+        </div>
+
+
+
 
 </body>
 </html>

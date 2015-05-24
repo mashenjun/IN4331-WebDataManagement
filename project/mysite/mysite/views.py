@@ -15,7 +15,14 @@ from .form import UploadFileForm
 import requests
 import subprocess
 import shutil
+p_temp_title = list()
+p_temp_body = list()
+p_temp_filename = ""
 
+np_temp_body= list()
+np_temp_filename=""
+np_temp_num=""
+np_temp_father=""
 
 
 class TryExist:
@@ -448,6 +455,7 @@ def addtag(x,y):
     return result
 
 def sha_poetry(request,offset):
+    print offset
     a = TryExist()
     temp='''let $ms:=doc('apps/shakespeare/data/work-types.xml')
     for $result in $ms//items/item['''+offset+''']/id
@@ -467,12 +475,19 @@ def sha_poetry(request,offset):
         sha_body = a.get_data(quer0+myres2+quer4_2)
     #print etree.fromstring(myres).text
     # data= requests
+
+    global p_temp_body
+    global p_temp_title
+    global p_temp_filename
+    p_temp_body = sha_body
+    p_temp_title = sha_title
+    p_temp_filename = myres2.split('.')[0]
     print("-------------")
-    print(sha_resp)
+    print(sha_body)
     print("-------------")
     sha_staff=zip(sha_name,sha_resp)
     t = get_template('sha_poetry.html')
-    html = t.render(Context({'title': sha_title,'staff':sha_staff,'body':sha_body,'filename':myres2.split('.')[0]}))
+    html = t.render(Context({'title': sha_title,'staff':sha_staff,'body':sha_body,'filename':myres2.split('.')[0],"num":offset}))
     return HttpResponse(html)
 
 def sha_npoetry(request,offset):
@@ -505,7 +520,6 @@ def sha_npoetry(request,offset):
         c.append(scene[x:x+int(num)])
         x=x+int(num)
 
-
     for i in range(b.__len__()):
         for j in range(len(b[i])):
             b[i][j]=b[i][j].split('*')
@@ -515,19 +529,30 @@ def sha_npoetry(request,offset):
             b[i][j].append(temp[0])
             b[i][j].append(','.join(temp[1:]))
 
-
     print c
     print ('====================')
     print b
-
+    global np_temp_body
+    global np_temp_filename
+    global np_temp_father
+    global np_temp_num
+    np_temp_body = b
+    np_temp_filename = myres2.split('.')[0]
+    np_temp_num=offset
+    np_temp_father=sha_title[0]
     sha_staff=zip(sha_name,sha_resp)
     t = get_template('sha_npoetry.html')
-    html = t.render(Context({'title': sha_title,'staff':sha_staff,'body':b,'filename':myres2.split('.')[0]}))
+    html = t.render(Context({'title': sha_title,'staff':sha_staff,'body':b,'filename':myres2.split('.')[0],"num":offset}))
     return HttpResponse(html)
 
-def sha_poetry_list(request,offset):
+
+def sha_poetry_list(request,offset_title):
+    offset=str(offset_title).split('_')[0]
+    title = str(offset_title).split('_')[1]
+    linknum = str(offset_title).split('_')[2]
+    # print (request.GET["body"])
     a = TryExist()
-    #print (str(offset))
+    print (str(offset))
     filename=str(offset).split('@')[0]+'.xml\')'
     num = str(offset).split('@')[1]
     num_1 = str(int(num)//20+1)
@@ -545,11 +570,12 @@ def sha_poetry_list(request,offset):
     # print("#################################")
     # print(num,num_1,num_2)
     # print(query)
-    # print (new_sha_list)
+    print (new_sha_list)
     # print (str(offset))
     # print("#################################")
+    link = "/sha_poetry/"+linknum+"/"
     t = get_template('sha_poetry_list.html')
-    html = t.render(Context({'listcontent':new_sha_list}))
+    html = t.render(Context({'listcontent':new_sha_list,'title':title,'link':link,'p_temp_body':p_temp_body,'p_temp_title':p_temp_title,'p_temp_filename':p_temp_filename,'num':linknum}))
     return HttpResponse(html)
 
 def sha_npoetry_list(request,offset):
@@ -565,14 +591,15 @@ def sha_npoetry_list(request,offset):
     for i in range(0,len(dialogue)):
         new_dialogue.append(dialogue[i].split('\n'))
         print("#################################")
-        print (dialogue[i])
-        print (dialogue[i].split('\n'))
+        # print (dialogue[i])
+        # print (dialogue[i].split('\n'))
 
         print("#################################")
     print(len(new_dialogue))
+    print (np_temp_body)
     content_list = zip(speaker,new_dialogue)
     t = get_template('sha_npoetry_list.html')
-    html = t.render(Context({'act_sc':'Act '+act+', Scene '+sc,'content':content_list}))
+    html = t.render(Context({'act_sc':'Act '+act+', Scene '+sc,'content':content_list,'body':np_temp_body,'filename':np_temp_filename,'father':np_temp_father,'num':np_temp_num}))
     return HttpResponse(html)
 
 def xslttest(request):
