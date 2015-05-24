@@ -15,6 +15,7 @@ from .form import UploadFileForm
 import requests
 import subprocess
 import shutil
+from .querys import *
 p_temp_title = list()
 p_temp_body = list()
 p_temp_filename = ""
@@ -67,110 +68,132 @@ class TryExist:
     </code-table>'''
     ,"musics/a.xml",True)
 
-quer0 = '''
-declare default element namespace "http://www.tei-c.org/ns/1.0";
-let $ms:=doc('/db/apps/shakespeare/data/'''
+
+
+quer0 = querys.quer0
+# '''
+# declare default element namespace "http://www.tei-c.org/ns/1.0";
+# let $ms:=doc('/db/apps/shakespeare/data/'''
 
 ####query for poetry
-quer1 = '''
-for $result in $ms//titleStmt/title
-return data($result)
-'''
+quer1 = querys.quer1
+# '''
+# for $result in $ms//titleStmt/title
+# return data($result)
+# '''
 
-quer2 = '''
-for $result in $ms//titleStmt/respStmt/name
-return data($result)
-'''
+quer2 = querys.quer2
+# '''
+# for $result in $ms//titleStmt/respStmt/name
+# return data($result)
+# '''
 
-quer3 = '''
-for $result in $ms//titleStmt/respStmt/resp
-return data($result)
-'''
+quer3 = querys.quer3
+# '''
+# for $result in $ms//titleStmt/respStmt/resp
+# return data($result)
+# '''
 
-quer4_1 ='''
-for $result in $ms//text/body/div//lg[@type='stanza']/*[1]
-return data($result/l[1])
-'''
+quer4_1 = querys.quer4_1
+# '''
+# for $result in $ms//text/body/div//lg[@type='stanza']/*[1]
+# return data($result/l[1])
+# '''
 
-quer4_2 ='''
-for $result in $ms//text/body/div//l[1]/text()
-return data($result)
-'''
+quer4_2 = querys.quer4_2
+# '''
+# for $result in $ms//text/body/div//l[1]/text()
+# return data($result)
+# '''
 
-querylist_1 ='''
-for $result in $ms//text/body/div/lg['''
+querylist_1 = querys.querylist_1
+# '''
+# for $result in $ms//text/body/div/lg['''
 
-querylist_2=''']
-return data($result)
-'''
+querylist_2= querys.querylist_2
+# ''']
+# return data($result)
+# '''
 
-querylist_son_1='''
-for $result in $ms//text/body/div['''
+querylist_son_1= querys.querylist_son_1
+# '''
+# for $result in $ms//text/body/div['''
 
-querylist_son_2=''']
-return data($result/div['''
+querylist_son_2= querys.querylist_son_2
+# ''']
+# return data($result/div['''
 
-querylist_son_3=''']/l)'''
+querylist_son_3= querys.querylist_son_3
+# ''']/l)'''
 
-final='''
-for $result in $ms//text/body/div/div
-return
-   data(
-   <b>{$result/stage[1],'*'}
-       {let $input := <b>{$result/head,$result/sp/speaker}</b>
-   for $value in distinct-values($input/speaker)
-   return <b>{$value,'*'}</b>
-       }
-   </b>)
-'''
+final= querys.final
+# '''
+# for $result in $ms//text/body/div/div
+# return
+#    data(
+#    <b>{$result/stage[1],'*'}
+#        {let $input := <b>{$result/head,$result/sp/speaker}</b>
+#    for $value in distinct-values($input/speaker)
+#    return <b>{$value,'*'}</b>
+#        }
+#    </b>)
+# '''
 
-test1='''
-for $result in $ms//text/body/div
-return
-     data($result/div/head)
-'''
+test1= querys.test1
+# '''
+# for $result in $ms//text/body/div
+# return
+#      data($result/div/head)
+# '''
 
-test2='''
-for $result in $ms//text/body/div
-return
-     data($result/count(div))
-'''
+test2= querys.test2
+# '''
+# for $result in $ms//text/body/div
+# return
+#      data($result/count(div))
+# '''
 
 
-query_speaker_1='''
-for $result in $ms//text/body/div/div
-where $result/@xml:id=\''''
+query_speaker_1= querys.query_speaker_1
+# '''
+# for $result in $ms//text/body/div/div
+# where $result/@xml:id=\''''
 
-query_speaker_2='''\'
-return
-    data($result/sp/speaker)
-'''
+query_speaker_2= querys.query_speaker_2
+# '''\'
+# return
+#     data($result/sp/speaker)
+# '''
 
-query_dialogue_1='''
-for $result in $ms//text/body/div/div/sp
-let $name := $result/speaker
-where $result/../@xml:id=\''''
+query_dialogue_1= querys.query_dialogue_1
+# '''
+# for $result in $ms//text/body/div/div/sp
+# let $name := $result/speaker
+# where $result/../@xml:id=\''''
 
-query_dialogue_2='''\'
-return
-    data(<b>{$result/(l|ab)}</b>)
-'''
+query_dialogue_2= querys.query_dialogue_2
+# '''\'
+# return
+#     data(<b>{$result/(l|ab)}</b>)
+# '''
 
-queryindex1 ='''
-let $ms:=doc('apps/shakespeare/data/work-types.xml')
-for $result in $ms//items/item
-where $result/label!='The Two Noble Kinsmen'
-return data($result/label)
-'''
+queryindex1 = querys.queryindex1
+# '''
+# let $ms:=doc('apps/shakespeare/data/work-types.xml')
+# for $result in $ms//items/item
+# where $result/label!='The Two Noble Kinsmen'
+# return data($result/label)
+# '''
 
-queryindex2 ='''
-xquery version "3.0";
-let $ms:=doc('apps/shakespeare/data/work-types.xml')
-for $result in $ms//items/item
-where $result/label!='The Two Noble Kinsmen'
-return
-data(<b>{$result/value[1]/text(),' ',$result/value[2]/text(),' ',$result/value[3]/text(),' ',$result/value[4]/text()}</b>)
-'''
+queryindex2 = querys.queryindex2
+# '''
+# xquery version "3.0";
+# let $ms:=doc('apps/shakespeare/data/work-types.xml')
+# for $result in $ms//items/item
+# where $result/label!='The Two Noble Kinsmen'
+# return
+# data(<b>{$result/value[1]/text(),' ',$result/value[2]/text(),' ',$result/value[3]/text(),' ',$result/value[4]/text()}</b>)
+# '''
 
 def viewCSV(request):
     return  render_to_response('viewCSV.html')
@@ -197,9 +220,9 @@ def Xquerytest(request):
 
     #print etree.fromstring(myres).text
     # data= requests
-    print("-------------")
-    print(myres)
-    print("-------------")
+    # print("-------------")
+    # print(myres)
+    # print("-------------")
     t = get_template('Xquery_test.html')
     html = t.render(Context({'content':myres}))
     return HttpResponse(html)
@@ -282,7 +305,7 @@ def postdata(Num):
     request_url = "https://api.crowdflower.com/v1/jobs/{}/upload".format(job_id)
     headers = {'content-type': 'text/csv'}
     payload = { 'key': API_KEY }
-    print(os.getcwd())
+    # print(os.getcwd())
     requests.put(request_url, data=csv_file, params=payload, headers=headers)
 
 def sendrequest(request):
@@ -324,11 +347,11 @@ def sendrequest(request):
             for x in range(0, len(name)):
                 print(len(name[x].split(' ')))
                 if len(name[x].split(' '))==2:
-                    print ('<2>')
+                    # print ('<2>')
                     lastname= name[x].split(' ')[0]
                     firstname= name[x].split(' ')[1]
                 elif len(name[x].split(' '))==3:
-                    print ('<3>')
+                    # print ('<3>')
                     lastname = name[x].split(' ')[0]+" "+name[x].split(' ')[1]
                     firstname = name[x].split(' ')[2]
                 if body=="":
@@ -348,11 +371,11 @@ def sendrequest(request):
 
 
     request_content= url+'//movie['+body+']/title'
-    print (request_content)
+    # print (request_content)
     result=requests.get(request_content)
     #print (result.content)
     tree_title = ElementTree.fromstring(result.content)
-    print (len(tree_title.findall('*')))
+    # print (len(tree_title.findall('*')))
     if (len(tree_title.findall('*'))>1):
         for x in range(0, len(tree_title.findall('*'))-1):
             datastring=datastring+tree_title.findall('*')[x].text+mark
@@ -360,7 +383,7 @@ def sendrequest(request):
 
     elif (len(tree_title.findall('*'))==1):
         datastring= tree_title.findall('*')[0].text
-    print (datastring)
+    # print (datastring)
     return HttpResponse(datastring)
 
 def getsummery(request):
@@ -406,13 +429,13 @@ def main(request):
     return HttpResponse("Success!!!")
 
 def summary(request, offset):
-    print("---------------")
-    print(str(offset))
-    print("---------------")
+    # print("---------------")
+    # print(str(offset))
+    # print("---------------")
     t = get_template('summary.html')
     request_content= "http://localhost:8080/exist/rest/db/movies/movies.xml?_query=//movie[title=\""+offset+"\"]/summary"
     content= requests.get(request_content)
-    print(content.content)
+    # print(content.content)
     if "summary" in content.content:
         txt = content.content.split("<summary>")[1].split('</summary>')[0]
         result = txt
@@ -429,11 +452,11 @@ def sha_index(request):
     myres = a.get_data(queryindex2)
     mystring_1 = a.get_data_string(queryindex1)
     mystring_2 = a.get_data_string(queryindex2)
-    print ("############################")
-    print (mystring_1)
-    print ("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~")
-    print (mystring_2)
-    print ("############################")
+    # print ("############################")
+    # print (mystring_1)
+    # print ("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~")
+    # print (mystring_2)
+    # print ("############################")
     for j in range(0,len(myres)):
         myres[j]=myres[j].split()
         myres[j]=' , '.join(myres[j])
@@ -455,16 +478,16 @@ def addtag(x,y):
     return result
 
 def sha_poetry(request,offset):
-    print offset
+    # print offset
     a = TryExist()
     temp='''let $ms:=doc('apps/shakespeare/data/work-types.xml')
     for $result in $ms//items/item['''+offset+''']/id
     return data($result)'''
     myres2 = a.get_data(temp)[0]
     myres2 = myres2.replace('sha-','')+'.xml\')'
-    print("##############")
-    print(myres2)
-    print("##############")
+    # print("##############")
+    # print(myres2)
+    # print("##############")
     #query=quer0+myres2+quer2
     sha_title = a.get_data(quer0+myres2+quer1)
     sha_name = a.get_data(quer0+myres2+quer2)
@@ -482,25 +505,25 @@ def sha_poetry(request,offset):
     p_temp_body = sha_body
     p_temp_title = sha_title
     p_temp_filename = myres2.split('.')[0]
-    print("-------------")
-    print(sha_body)
-    print("-------------")
+    # print("-------------")
+    # print(sha_body)
+    # print("-------------")
     sha_staff=zip(sha_name,sha_resp)
     t = get_template('sha_poetry.html')
     html = t.render(Context({'title': sha_title,'staff':sha_staff,'body':sha_body,'filename':myres2.split('.')[0],"num":offset}))
     return HttpResponse(html)
 
 def sha_npoetry(request,offset):
-    print (offset)
+    # print (offset)
     a = TryExist()
     temp='''let $ms:=doc('apps/shakespeare/data/work-types.xml')
     for $result in $ms//items/item['''+offset+''']/id
     return data($result)'''
     myres2 = a.get_data(temp)[0]
     myres2 = myres2.replace('sha-','')+'.xml\')'
-    print("##############")
-    print(myres2)
-    print("##############")
+    # print("##############")
+    # print(myres2)
+    # print("##############")
 
 
     #query=quer0+myres2+quer2
@@ -529,9 +552,9 @@ def sha_npoetry(request,offset):
             b[i][j].append(temp[0])
             b[i][j].append(','.join(temp[1:]))
 
-    print c
-    print ('====================')
-    print b
+    # print c
+    # print ('====================')
+    # print b
     global np_temp_body
     global np_temp_filename
     global np_temp_father
@@ -552,7 +575,7 @@ def sha_poetry_list(request,offset_title):
     linknum = str(offset_title).split('_')[2]
     # print (request.GET["body"])
     a = TryExist()
-    print (str(offset))
+    # print (str(offset))
     filename=str(offset).split('@')[0]+'.xml\')'
     num = str(offset).split('@')[1]
     num_1 = str(int(num)//20+1)
@@ -570,7 +593,7 @@ def sha_poetry_list(request,offset_title):
     # print("#################################")
     # print(num,num_1,num_2)
     # print(query)
-    print (new_sha_list)
+    # print (new_sha_list)
     # print (str(offset))
     # print("#################################")
     link = "/sha_poetry/"+linknum+"/"
@@ -590,13 +613,13 @@ def sha_npoetry_list(request,offset):
     dialogue = a.get_data(quer0+filename+query_dialogue_1+act_sc+query_dialogue_2)
     for i in range(0,len(dialogue)):
         new_dialogue.append(dialogue[i].split('\n'))
-        print("#################################")
+        # print("#################################")
         # print (dialogue[i])
         # print (dialogue[i].split('\n'))
 
-        print("#################################")
-    print(len(new_dialogue))
-    print (np_temp_body)
+    #     print("#################################")
+    # print(len(new_dialogue))
+    # print (np_temp_body)
     content_list = zip(speaker,new_dialogue)
     t = get_template('sha_npoetry_list.html')
     html = t.render(Context({'act_sc':'Act '+act+', Scene '+sc,'content':content_list,'body':np_temp_body,'filename':np_temp_filename,'father':np_temp_father,'num':np_temp_num}))
@@ -671,7 +694,7 @@ def create_midi(request):
             if chunk: # filter out keep-alive new chunks
                 f.write(chunk)
                 f.flush()
-    print os.path.dirname(os.path.abspath(__file__))
+    # print os.path.dirname(os.path.abspath(__file__))
 
     os.system('rm *.pdf')
     os.system('rm *.midi')
@@ -690,27 +713,30 @@ def create_midi(request):
     return HttpResponse("success")
 
 
-query_lyric1='''
-<result>
-{
-let $ms:=doc('/db/musics/'''
+query_lyric1=querys.query_lyric1
+# '''
+# <result>
+# {
+# let $ms:=doc('/db/musics/'''
 
-query_lyric2='''
-for $result in $ms//lyric
-return $result
-}
-</result>
-'''
+query_lyric2=querys.query_lyric2
+# '''
+# for $result in $ms//lyric
+# return $result
+# }
+# </result>
+# '''
 
-query_lyric3='''
-<result>
-{
-let $ms:=doc('/db/musics/Binchois.xml')
-for $result in $ms//lyric
-return ($result)
-}
-</result>
-'''
+query_lyric3=querys.query_lyric3
+# '''
+# <result>
+# {
+# let $ms:=doc('/db/musics/Binchois.xml')
+# for $result in $ms//lyric
+# return ($result)
+# }
+# </result>
+# '''
 def music_Lyric(request,offset):
     a = TryExist()
     fake=str(offset)
@@ -726,7 +752,7 @@ def music_Lyric(request,offset):
     return HttpResponse(etree.tostring(data))
 
 def handle_uploaded_file(f,name):
-    print "/db/musics/"+name
+    # print "/db/musics/"+name
     a = TryExist()
     a.upload_to_exist(f,"/db/musics/"+name)
     # destination= open(os.path.join(os.path.dirname(__file__),'static/'+name),'wb+')
@@ -753,7 +779,7 @@ def lyric_search(request):
     temp=requests.get("http://localhost:8080/exist/rest/db/musics?_query=//work-title[../..//lyric/text='"+fake+"']").content.replace('exist:','')
     xml_tree = etree.fromstring(temp)
     xslt_tree = etree.XSLT(etree.parse(os.path.join(os.path.dirname(__file__),'static/xslt/lyrics_list.xsl')))
-    print temp
+    # print temp
     data = xslt_tree(xml_tree)
     return HttpResponse(etree.tostring(data))
 
