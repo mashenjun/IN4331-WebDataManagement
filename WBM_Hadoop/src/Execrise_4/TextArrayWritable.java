@@ -1,4 +1,4 @@
-package Exercise_2;
+package Execrise_4;
 
 import org.apache.hadoop.io.ArrayWritable;
 import org.apache.hadoop.io.Text;
@@ -8,6 +8,6 @@ import org.apache.hadoop.io.Text;
  */
 public class TextArrayWritable extends ArrayWritable {
     public TextArrayWritable() {
-        super(Text.class);  // In
+        super(Text.class);  // 这里，根据自己要实现的数组类型，填入对应实现了writable接口的类型，比方说IntWritable
     }
 }

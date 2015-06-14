@@ -31,7 +31,7 @@ public class Reducer1 extends Reducer<IntWritable, TextArrayWritable, NullWritab
         for (TextArrayWritable val : values) {
             count++;
             String[] element = val.toStrings();
-            //System.out.println("."+val.toStrings()[0]+" "+val.toStrings()[1]+" "+val.toStrings()[2]+".");
+            System.out.println("<key: "+key+", value: ["+val.toStrings()[0]+","+val.toStrings()[1]+","+val.toStrings()[2]+"]>");
 
             if (element[0].equals("artist")){
                 artist_info = element[1]+"\t"+element[2];

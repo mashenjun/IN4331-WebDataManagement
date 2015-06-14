@@ -13,9 +13,6 @@ import java.util.ArrayList;
  */
 public class Reducer2 extends Reducer<IntWritable, TextArrayWritable, NullWritable, Text> {
 
-    private static Text title = new Text();
-    private int count =0;
-
     @Override
     protected void reduce(IntWritable key, Iterable<TextArrayWritable> values,
                           Context context)
@@ -29,7 +26,6 @@ public class Reducer2 extends Reducer<IntWritable, TextArrayWritable, NullWritab
 //            System.out.println("."+val.toStrings()[0]+" "+val.toStrings()[1]+" "+val.toStrings()[2]+".");
 //        }
         for (TextArrayWritable val : values) {
-            count++;
             String[] element = val.toStrings();
             //System.out.println("."+val.toStrings()[0]+" "+val.toStrings()[1]+" "+val.toStrings()[2]+".");
 
@@ -49,7 +45,6 @@ public class Reducer2 extends Reducer<IntWritable, TextArrayWritable, NullWritab
             }
         }
         System.out.println("=================");
-	  /* Iterate on the list to compute the count */
 
 
 

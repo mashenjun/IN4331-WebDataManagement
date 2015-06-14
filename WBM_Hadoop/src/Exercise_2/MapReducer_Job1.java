@@ -19,19 +19,16 @@ public class MapReducer_Job1 {
 	 * Load the Haddop configuration. IMPORTANT: the
 	 * $HADOOP_HOME/conf directory must be in the CLASSPATH
 	 */
-        Configuration conf = new Configuration();
 
-        conf.set("xmlinput.start","<movies>");
-        conf.set("xmlinput.end", "</movies>");
-
-
-	/* We expect two arguments */
-
+        	/* We expect two arguments */
         if (args.length != 2) {
             System.err.println("Usage: Exercise_2.AuthorsJob <in> <out>");
             System.exit(2);
         }
+        Configuration conf = new Configuration();
 
+        conf.set("xmlinput.start","<movies>");
+        conf.set("xmlinput.end", "</movies>");
 	/* Allright, define and submit the job */
         Job job = Job.getInstance(conf, "Execrise 2.1");
         job.setInputFormatClass(XmlInputFormat.class);

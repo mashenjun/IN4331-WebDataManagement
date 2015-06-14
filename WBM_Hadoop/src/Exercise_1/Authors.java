@@ -72,20 +72,20 @@ public class Authors {
         public void reduce(Text key, Iterable<IntWritable> values,
                            Context context)
                 throws IOException, InterruptedException {
-            System.out.println("hello");
-//            int count =  0;
-//            for (IntWritable val : values) {
-//                count += val.get();
-//                if (count==10){
-//                    temp_result.set(count);
-//                    context.write(key, temp_result);
-//                    count = 0;
-//                }
-//            }
-//            if (count<10){
-//                temp_result.set(count);
-//                context.write(key, temp_result);
-//            }
+            //System.out.println("hello");
+            int count =  0;
+            for (IntWritable val : values) {
+                count += val.get();
+                if (count==10){
+                    temp_result.set(count);
+                    context.write(key, temp_result);
+                    count = 0;
+                }
+            }
+            if (count<10){
+                temp_result.set(count);
+                context.write(key, temp_result);
+            }
 
         }
     }

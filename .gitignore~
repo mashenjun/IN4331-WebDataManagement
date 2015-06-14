@@ -2,3 +2,6 @@
 .idea/
 *.iml
 *.pyc
+WBM_Hadoop/author-large.txt
+WBM_Hadoop/author-small.txt
+WBM_Hadoop/datasets-small/

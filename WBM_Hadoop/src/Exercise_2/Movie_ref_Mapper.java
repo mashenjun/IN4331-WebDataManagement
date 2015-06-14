@@ -1,6 +1,9 @@
 package Exercise_2;
 
-import org.apache.hadoop.io.*;
+import org.apache.hadoop.io.IntWritable;
+import org.apache.hadoop.io.LongWritable;
+import org.apache.hadoop.io.Text;
+import org.apache.hadoop.io.Writable;
 import org.apache.hadoop.mapreduce.Mapper;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -17,6 +20,7 @@ import java.io.StringReader;
 /**
  * Created by mashenjun on 26-5-15.
  */
+
 public class Movie_ref_Mapper extends Mapper<LongWritable, Text, IntWritable,TextArrayWritable> {
     private final static IntWritable one = new IntWritable(1);
     private Text author = new Text();
@@ -24,7 +28,6 @@ public class Movie_ref_Mapper extends Mapper<LongWritable, Text, IntWritable,Tex
     private Text content = new Text();
     private TextArrayWritable  text_list = new TextArrayWritable();
     private Text movie_title,role,Birth,TName = new Text();
-
 
     public void map(LongWritable key, Text value, Context context) throws IOException, InterruptedException {
        String document = value.toString();
